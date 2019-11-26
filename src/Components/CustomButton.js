@@ -3,28 +3,30 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Sizes, Colors } from '../Constants';
 
-const { MOBILE } = Sizes;
+const { DESKTOP, MOBILE } = Sizes;
 const { bgGreen, bgBlack, white } = Colors;
 
 const Button = styled.button`
-  height: 40px;
-  width: 130px;
+  height: 44px;
+  width: ${({ width }) => width || '130px'};
   cursor: pointer;
   border: none;
   outline: 0;
-  background-color: ${props => props.primary ? bgGreen : bgBlack};
+  background-color: ${({ primary }) => primary ? bgGreen : bgBlack};
+
+  @media ${DESKTOP} {
+    &:hover {
+      background-color: ${({ primary }) => primary ? 'rgba(0, 253, 151, 0.7)' : bgBlack};
+    }
+  
+    &:active {
+      background-color: ${({ primary }) => primary ? 'rgba(0, 253, 151, 0.5)' : bgBlack};
+    }
+  }
 
   @media ${MOBILE} {
-    height: 40px;
-    width: 50%;
-  }
-
-  &:hover {
-    background-color: ${props => props.primary ? 'rgba(0, 253, 151, 0.7)' : bgBlack};
-  }
-
-  &:active {
-    background-color: ${props => props.primary ? 'rgba(0, 253, 151, 0.5)' : bgBlack};
+    height: 48px;
+    width: ${({ width }) => width || '50%'};;
   }
 `
 
@@ -41,8 +43,8 @@ const Div = styled.div`
   }
 `
 
-const CustomButton = ({ text, primary, onClick }) => (
-  <Button primary={primary} onClick={onClick}>
+const CustomButton = ({ text, primary, width, onClick }) => (
+  <Button primary={primary} width={width} onClick={onClick}>
     <Div primary={primary}>{text.toUpperCase()}</Div>
   </Button>
 )

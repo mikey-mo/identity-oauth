@@ -1,5 +1,7 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom'
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import {
   CustomButton,
   Banner,
@@ -44,11 +46,7 @@ const Body = styled.div`
   }
 
   @media ${MOBILE} {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    height: ${window.innerHeight}px;
   }
 `
 
@@ -60,15 +58,16 @@ const Container = styled.div`
   }
 
   @media ${MOBILE} {
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
   }
 `
 
+const Permissions = ({ history, permissions }) => {
+  const nextPath = (param) => history.push(param)
 
-const BodyComponent = ({ permissionsList }) => {
-  const list = permissionsList.map(permission => (
+  const list = permissions.map(permission => (
     <LineItem
       request={permission.request}
       response={permission.response}
@@ -76,30 +75,37 @@ const BodyComponent = ({ permissionsList }) => {
   ))
 
   return (
-    <BodyDiv>
-      <Banner merchant="JIGSAW" />
-      {list}
-    </BodyDiv>
-  )
+    <Body>
+      <Container>
+
+        <Header merchant="JIGSAW" />
+
+        <BodyDiv>
+          <Banner merchant="JIGSAW" />
+          {list}
+        </BodyDiv>
+
+        <Policy />
+
+        <FooterDiv>
+          <CustomButton text="CANCEL" onClick={() => nextPath('/auth/identifiers')} />
+          <CustomButton primary text="AUTHORIZE" onClick={() => console.log('Authorize')} />
+        </FooterDiv>
+
+      </Container>
+    </Body>
+  );
 }
 
 
-const FooterComponent = () => (
-  <FooterDiv>
-    <CustomButton text="CANCEL" onClick={() => console.log('Cancel')} />
-    <CustomButton primary text="AUTHORIZE" onClick={() => console.log('Authorize')} />
-  </FooterDiv>
-)
+Permissions.defaultProps = {
+  permissions: MockData.data,
+}
 
-const Permissions = () => (
-  <Body>
-    <Container>
-      <Header merchant="JIGSAW" />
-      <BodyComponent permissionsList={MockData.data} />
-      <Policy />
-      <FooterComponent />
-    </Container>
-  </Body>
-);
+Permissions.propTypes = {
+  permissions: PropTypes.arrayOf(
+    PropTypes.shape({}),
+  ),
+}
 
-export default Permissions;
+export default withRouter(Permissions);
