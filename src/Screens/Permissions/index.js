@@ -1,78 +1,105 @@
 import React from 'react';
-import logo from '../../logo.svg'
-import './Permissions.css';
-import { CustomButton, Banner } from '../../Components';
-import { MockData } from '../../Constants/MockData';
+import styled from 'styled-components';
+import {
+  CustomButton,
+  Banner,
+  Header,
+  LineItem,
+  Policy,
+} from '../../Components';
+import { Sizes, Colors, MockData } from '../../Constants';
 
-const LineItemComponent = ({ request, response }) => (
-  <div className="permissions--line-item-container">
-    <img src={logo} className="permissions--line-item-image" alt="IMAGE" />
-    <div className="permissions--line-item-request-wrapper">
-      <text className="permissions--line-item-request-title">{request.toUpperCase()}</text>
-      <text className="permissions--line-item-request-response">{response.toUpperCase()}</text>
-    </div>
-  </div>
-)
 
-const HeaderComponent = ({ merchant }) => {
-  const merchantName = merchant || 'JIGSAW'
+const { DESKTOP, MOBILE } = Sizes;
+const { bgBlack, gray1 } = Colors;
 
-  return (
-    <div className="permissions--header-container">
-      <div className="permissions--header-merchant-wrapper">
-        <text className="permissions--header-id">CONNECT TO IDENTITY.SERVICE</text>
-        <text className="permissions--header-merchant-name">{merchantName}</text>
-      </div>
-      <div className="permissions--header-merchant-image-wrapper">
-        <img src={logo} className="permissions--header-merchant-image" alt="IMAGE" />
-      </div>
-    </div>
-  )
-}
+const BodyDiv = styled.div`
+  height: 40vh;
+  background-color: ${bgBlack};
+  padding: 0px 20px;
+  overflow-y: scroll;
+
+  @media ${MOBILE} {
+    flex: 1;
+  }
+`
+
+const FooterDiv = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100px;
+  padding: 0px 20px;
+  background-color: ${bgBlack};
+`
+
+const Body = styled.div`
+  background-color: ${gray1};
+
+  @media ${DESKTOP} {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media ${MOBILE} {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+`
+
+const Container = styled.div`
+  @media ${DESKTOP} {
+    width: 500px;
+    overflow: hidden;
+    box-shadow: 2px 2px 6px black;
+  }
+
+  @media ${MOBILE} {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+`
+
 
 const BodyComponent = ({ permissionsList }) => {
-
   const list = permissionsList.map(permission => (
-    <LineItemComponent
+    <LineItem
       request={permission.request}
       response={permission.response}
     />
   ))
 
   return (
-    <div className="permissions--body-container">
-      <Banner />
-  
+    <BodyDiv>
+      <Banner merchant="JIGSAW" />
       {list}
-    </div>
+    </BodyDiv>
   )
 }
 
-const PolicyComponent = () => (
-  <div className="permissions--policy-container">
-    <text className="permissions--policy-terms-text">
-      FOR MORE INFORMATION REGARDING TERMS AND AGREEMENT PLEASE CLICK
-      <span style={{ fontWeight: '800' }}> HERE</span>
-    </text>
-  </div>
-)
 
 const FooterComponent = () => (
-  <div className="permissions--footer-container">
+  <FooterDiv>
     <CustomButton text="CANCEL" onClick={() => console.log('Cancel')} />
     <CustomButton primary text="AUTHORIZE" onClick={() => console.log('Authorize')} />
-  </div>
+  </FooterDiv>
 )
 
 const Permissions = () => (
-  <div className="permissions--body">
-      <div className="permissions--container">
-        <HeaderComponent />
-        <BodyComponent permissionsList={MockData} />
-        <PolicyComponent />
-        <FooterComponent />
-      </div>
-  </div>
+  <Body>
+    <Container>
+      <Header merchant="JIGSAW" />
+      <BodyComponent permissionsList={MockData.data} />
+      <Policy />
+      <FooterComponent />
+    </Container>
+  </Body>
 );
 
 export default Permissions;

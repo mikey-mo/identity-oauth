@@ -1,4 +1,4 @@
-export const Sizes = {
-  desktop: '(min-width: 501px)',
-  mobile: '(max-width: 500px)',
+export default {
+  DESKTOP: '(min-width: 501px)',
+  MOBILE: '(max-width: 500px)',
 };

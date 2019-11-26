@@ -1,56 +1,64 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Sizes } from '../Constants/Sizes';
+import { Sizes, Colors } from '../Constants';
+
+const { MOBILE } = Sizes;
+const { bgGreen, bgBlack, white } = Colors;
 
 const Button = styled.button`
+  height: 40px;
+  width: 130px;
   cursor: pointer;
   border: none;
   outline: 0;
-  background-color: ${props => props.primary ? '#00FD97' : '#212121'};
+  background-color: ${props => props.primary ? bgGreen : bgBlack};
+
+  @media ${MOBILE} {
+    height: 40px;
+    width: 50%;
+  }
 
   &:hover {
-    background-color: ${props => props.primary ? 'rgba(0, 253, 151, 0.7)' : '#212121'};
+    background-color: ${props => props.primary ? 'rgba(0, 253, 151, 0.7)' : bgBlack};
   }
 
   &:active {
-    background-color: ${props => props.primary ? 'rgba(0, 253, 151, 0.5)' : '#212121'};
-  }
-
-  @media ${Sizes.desktop} {
-    height: 40px;
-    width: 130px;
-  }
-
-  @media ${Sizes.mobile} {
-    height: 40px;
-    width: 50%;
+    background-color: ${props => props.primary ? 'rgba(0, 253, 151, 0.5)' : bgBlack};
   }
 `
 
 const Div = styled.div`
-  color: ${props => props.primary ? '#212121' : '#FFFFFF'};
+  color: ${props => props.primary ? bgBlack : white};
   font-family: Verdana;
+  font-size: 10px;
   font-weight: ${props => props.primary ? '700' : '400'};
   text-align: center;
   letter-spacing: 2px;
 
-  @media ${Sizes.desktop} {
-    font-size: 10px;
-  }
-
-  @media ${Sizes.mobile} {
+  @media ${MOBILE} {
     font-size: 2.5vmin;
   }
 `
 
-const CustomButton = ({ text, primary, onClick }) => {
-  const buttonText = text || 'BUTTON';
+const CustomButton = ({ text, primary, onClick }) => (
+  <Button primary={primary} onClick={onClick}>
+    <Div primary={primary}>{text.toUpperCase()}</Div>
+  </Button>
+)
 
-  return (
-    <Button primary={primary} onClick={onClick}>
-      <Div primary={primary}>{buttonText.toUpperCase()}</Div>
-    </Button>
-  )
+
+CustomButton.defaultProps = {
+  text: 'BUTTON',
+  primary: false,
+  onClick: () => console.log('CLICKING'),
 }
+
+CustomButton.propTypes = {
+  text: PropTypes.string,
+  primary: PropTypes.bool,
+  onClick: PropTypes.func,
+}
+
 
 export default CustomButton;
