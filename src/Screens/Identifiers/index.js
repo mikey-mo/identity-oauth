@@ -5,8 +5,11 @@ import styled from 'styled-components';
 import logo from '../../logo.svg';
 import { CustomButton } from '../../Components';
 import { Sizes, Colors } from '../../Constants';
+import notificationService from '../../Services/notification';
+import mockData from '../../Constants/MockData';
 
-
+const { code: { userId } } = mockData;
+const { requestCode } = notificationService;
 const { DESKTOP, MOBILE } = Sizes;
 const { white, bgBlack, gray1, gray3 } = Colors;
 
@@ -96,8 +99,20 @@ const ButtonWrapper = styled.div`
   width: 100%;
 `
 
-const Identifiers = ({ history, merchant }) => {
+const Identifiers = ({ match: { params: { identifier }}, history, merchant }) => {
   const nextPath = (param) => history.push(param)
+
+  const sendNotification = async (type) => {
+    try {
+      const response = await requestCode({ type, identifier, userId });
+      if (response.status === 200) nextPath("/auth/verify");
+      console.warn('there was a problem');
+      console.log(response);
+    }
+    catch (e) {
+      console.log('something went wrong', e);
+    }
+  }
 
   return (
     <Body>
@@ -113,8 +128,8 @@ const Identifiers = ({ history, merchant }) => {
         </EnrollWrapper>
 
         <ButtonWrapper>
-          <CustomButton primary width="80%" onClick={() => nextPath('/auth/permissions')} text="USING EMAIL" />
-          <CustomButton primary width="80%" onClick={() => nextPath('/')} text="USING PHONE NUMBER"/>
+          <CustomButton primary width="80%" onClick={() => sendNotification('email')} text="USING EMAIL" />
+          <CustomButton primary width="80%" onClick={() => sendNotification('phone')} text="USING PHONE NUMBER"/>
         </ButtonWrapper>
 
       </Container>
