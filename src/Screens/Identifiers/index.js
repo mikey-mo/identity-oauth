@@ -106,8 +106,10 @@ const Identifiers = ({ match: { params: { identifier }}, history, merchant }) =>
     try {
       const response = await requestCode({ type, identifier, userId });
       if (response.status === 200) nextPath("/auth/verify");
-      console.warn('there was a problem');
-      console.log(response);
+      else {
+        console.warn('there was a problem');
+        console.log(response);
+      }
     }
     catch (e) {
       console.log('something went wrong', e);

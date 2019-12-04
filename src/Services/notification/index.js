@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const notificationUrl = "http://104.248.61.250:8080/";
+const notificationUrl = "https://identity-notif.ddns.net/";
 const requestCodePath = "code";
 
 const requestCode = async ({ type, identifier, userId }) => {
