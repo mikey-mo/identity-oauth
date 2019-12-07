@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import logo from '../../logo.svg';
 import { CustomButton } from '../../Components';
-import notificationService from '../../Services/notification';
 import { Sizes, Colors } from '../../Constants';
+import notificationService from '../../Services/notification';
+import identityService from '../../Services/identity';
 import mockData from '../../Constants/MockData';
 
+const { auth: { addIdentifier } } = identityService;
 const { code: { userId } } = mockData;
 const { DESKTOP, MOBILE } = Sizes;
 const { white, bgBlack, gray1, gray3 } = Colors;
@@ -122,25 +124,30 @@ const AnotherCode = styled.button`
 class VerifyCode extends Component {
   state = { value: '', errorMsg: '' };
 
-  nextPath = (param) => {
+  nextPath = (url, params) => {
     const { history } = this.props; 
-    history.push(param)
+    history.push(url, params)
   }
 
-  onInputChange = ({ target: { value } }) => {
-    this.setState({ value });
-  }
+  onInputChange = ({ target: { value } }) => this.setState({ value });
 
   verifyCode = async () => {
     const { value } = this.state;
+    const { history: { location: { state: { type, identifier } } } } = this.props;
+
     try {
       const response = await verifyCode({ code: value, userId });
-      if (response.status === 200) this.nextPath("/auth/permissions");
-      console.warn('there was a problem');
-      console.log(response);
+      if (response.status === 200) {
+        const data = await addIdentifier(type, identifier);
+        if (data.status === 200) {
+          const { data: { identity: { id } } } = data; 
+          this.nextPath("/auth/permissions", { identityId: id });          
+        }
+      }
+      else console.warn('there was a problem', response);
     }
     catch (e) {
-      console.log('something went wrong', e);
+      console.warn('something went wrong', e);
     }
   }
 

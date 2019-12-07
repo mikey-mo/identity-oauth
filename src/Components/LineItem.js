@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Sizes, Colors } from '../Constants';
 import logo from '../logo.svg';
 
-
 const { MOBILE } = Sizes;
 
 const ContainerDiv = styled.div`
@@ -55,7 +54,6 @@ const ResText = styled.div`
   }
 `
 
-
 const LineItem = ({ request, response }) => (
   <ContainerDiv>
     <Image src={logo} alt="IMAGE" />
@@ -64,8 +62,7 @@ const LineItem = ({ request, response }) => (
       <ResText>{response.toUpperCase()}</ResText>
     </WrapperDiv>
   </ContainerDiv>
-)
-
+);
 
 LineItem.propTypes = {
   request: PropTypes.string,

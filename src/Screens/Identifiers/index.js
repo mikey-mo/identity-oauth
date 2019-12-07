@@ -1,15 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import logo from '../../logo.svg';
 import { CustomButton } from '../../Components';
 import { Sizes, Colors } from '../../Constants';
-import notificationService from '../../Services/notification';
-import mockData from '../../Constants/MockData';
 
-const { code: { userId } } = mockData;
-const { requestCode } = notificationService;
 const { DESKTOP, MOBILE } = Sizes;
 const { white, bgBlack, gray1, gray3 } = Colors;
 
@@ -99,46 +95,39 @@ const ButtonWrapper = styled.div`
   width: 100%;
 `
 
-const Identifiers = ({ match: { params: { identifier }}, history, merchant }) => {
-  const nextPath = (param) => history.push(param)
-
-  const sendNotification = async (type) => {
-    try {
-      const response = await requestCode({ type, identifier, userId });
-      if (response.status === 200) nextPath("/auth/verify");
-      else {
-        console.warn('there was a problem');
-        console.log(response);
-      }
-    }
-    catch (e) {
-      console.log('something went wrong', e);
-    }
+class Identifiers extends Component {
+  nextPath = (param) => {
+    const { history } = this.props;
+    history.push(param);
   }
 
-  return (
-    <Body>
-      <Container>
+  render () {
+    const { merchant } = this.props;
 
-        <ImageWrapper>
-          <Image src={logo} alt="AVATAR" />
-        </ImageWrapper>
+    return (
+      <Body>
+        <Container>
 
-        <EnrollWrapper>
-          <EnrollText>ENROLL WITH&nbsp;</EnrollText>
-          <MerchantText>{`${merchant.toUpperCase()}`}</MerchantText>
-        </EnrollWrapper>
+          <ImageWrapper>
+            <Image src={logo} alt="AVATAR" />
+          </ImageWrapper>
 
-        <ButtonWrapper>
-          <CustomButton primary width="80%" onClick={() => sendNotification('email')} text="USING EMAIL" />
-          <CustomButton primary width="80%" onClick={() => sendNotification('phone')} text="USING PHONE NUMBER"/>
-        </ButtonWrapper>
+          <EnrollWrapper>
+            <EnrollText>ENROLL WITH&nbsp;</EnrollText>
+            <MerchantText>{`${merchant.toUpperCase()}`}</MerchantText>
+          </EnrollWrapper>
 
-      </Container>
-    </Body>
-  )
-}
+          <ButtonWrapper>
+            <CustomButton primary width="80%" onClick={() => null} text="USING EMAIL" />
+            <CustomButton primary width="80%" onClick={() => null} text="USING PHONE NUMBER"/>
+          </ButtonWrapper>
 
+        </Container>
+      </Body>
+    );
+  }
+
+};
 
 Identifiers.defaultProps = {
   merchant: 'JIGSAW',

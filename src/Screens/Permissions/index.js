@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -10,8 +10,9 @@ import {
   Policy,
 } from '../../Components';
 import { Sizes, Colors, MockData } from '../../Constants';
+import identityService from '../../Services/identity';
 
-
+const { auth: { getPermissions, grantAuths } } = identityService;
 const { DESKTOP, MOBILE } = Sizes;
 const { bgBlack, gray1 } = Colors;
 
@@ -64,39 +65,101 @@ const Container = styled.div`
   }
 `
 
-const Permissions = ({ history, permissions }) => {
-  const nextPath = (param) => history.push(param)
+class Permissions extends Component {
+  state = { permissions: [] }
 
-  const list = permissions.map(permission => (
-    <LineItem
-      request={permission.request}
-      response={permission.response}
-    />
-  ))
+  async componentDidMount() {
+    try {
+      const response = await getPermissions();
+      if (response.status === 200) {
+        const { data: { permissions } } = response;
+        this.setState({ permissions });
+      }
+      else console.warn('something went wrong', response);
+    }
+    catch (e) {
+      console.warn(e);
+    }
+  }
 
-  return (
-    <Body>
+  nextPath = (url) => {
+    const { history } = this.props;
+    history.push(url);
+  }
+
+  list = () => this.state.permissions.map(
+    ({ consumer, scope, read, write }) => (
+      <LineItem
+        key={`${scope.id}${consumer.id}`}
+        request={
+          `${scope.name} -   
+          ${read.required ? 'Read access' : ''}
+          ${read.required && write.required ? ' & ' : ''}
+          ${write.required ? 'Write access' : ''}`
+        }
+        response={
+          `${scope.description}`
+        }
+      />
+    )
+  )
+
+  submit = async () => {
+    const {
+      history: {
+        location: {
+          state: {
+            identityId,
+          },
+        },
+      },
+    } = this.props;
+    const { permissions } = this.state;
+    try {
+      const response = await grantAuths(
+        identityId,
+        permissions.map(({ scope }) => {
+          return {
+            scope: scope.name,
+            read: true,
+            write: true,
+            share: true
+          };
+        })
+      );
+  
+      if (response.status === 201) this.nextPath("/auth/verified");
+      else console.warn('something went wrong', response);
+    }
+    catch (e) {
+      console.warn(e);
+    }
+  }
+
+  render () {
+    return (
+      <Body>
       <Container>
 
         <Header merchant="JIGSAW" />
 
         <BodyDiv>
           <Banner merchant="JIGSAW" />
-          {list}
+          {this.list()}
         </BodyDiv>
 
         <Policy />
 
         <FooterDiv>
-          <CustomButton text="CANCEL" onClick={() => nextPath('/auth/identifiers')} />
-          <CustomButton primary text="AUTHORIZE" onClick={() => console.log('Authorize')} />
+          <CustomButton text="CANCEL" onClick={() => this.nextPath('/auth/identifiers')} />
+          <CustomButton primary text="AUTHORIZE" onClick={this.submit} />
         </FooterDiv>
 
       </Container>
     </Body>
-  );
-}
-
+    );
+  }
+};
 
 Permissions.defaultProps = {
   permissions: MockData.data,
