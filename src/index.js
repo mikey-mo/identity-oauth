@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import Auth from './Screens/Auth';
 import Permissions from './Screens/Permissions';
 import Identifiers from './Screens/Identifiers';
 import * as serviceWorker from './serviceWorker';
@@ -10,6 +11,7 @@ import * as serviceWorker from './serviceWorker';
 const navigation = (
   <Router>
     <Route exact path="/" component={App} />
+    <Route exact path="/auth" component={Auth} />
     <Route path="/auth/identifiers" component={Identifiers} />
     <Route path="/auth/permissions" component={Permissions} />
   </Router>

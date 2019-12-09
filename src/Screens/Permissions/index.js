@@ -46,7 +46,7 @@ const Body = styled.div`
   }
 
   @media ${MOBILE} {
-    height: ${window.innerHeight}px;
+    height: 100vh;
   }
 `
 
@@ -69,6 +69,7 @@ const Permissions = ({ history, permissions }) => {
 
   const list = permissions.map(permission => (
     <LineItem
+      key={permission.response}
       request={permission.request}
       response={permission.response}
     />
@@ -88,7 +89,7 @@ const Permissions = ({ history, permissions }) => {
         <Policy />
 
         <FooterDiv>
-          <CustomButton text="CANCEL" onClick={() => nextPath('/auth/identifiers')} />
+          <CustomButton text="CANCEL" onClick={() => nextPath('/auth')} />
           <CustomButton primary text="AUTHORIZE" onClick={() => console.log('Authorize')} />
         </FooterDiv>
 
