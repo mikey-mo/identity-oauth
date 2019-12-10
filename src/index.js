@@ -1,10 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import Permissions from './Screens/Permissions';
+import VerifyCode from './Screens/VerifyCode';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const navigation = (
+  <Router>
+    <Route exact path="/:type" component={App} />
+    <Route path="/auth/verify" component={VerifyCode} />
+    <Route path="/auth/permissions" component={Permissions} />
+    <Route path="/auth/verified"><div><p>Verified</p></div></Route>
+    <Route path="/auth/cancelled"><div><p>Cancelled</p></div></Route>
+  </Router>
+);
+
+ReactDOM.render(navigation, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
