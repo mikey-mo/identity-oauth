@@ -79,10 +79,10 @@ const Permissions = ({ history, permissions }) => {
     <Body>
       <Container>
 
-        <Header merchant="JIGSAW" />
+        <Header merchant="OLD ROCKET" />
 
         <BodyDiv>
-          <Banner merchant="JIGSAW" />
+          <Banner merchant="OLD ROCKET" />
           {list}
         </BodyDiv>
 

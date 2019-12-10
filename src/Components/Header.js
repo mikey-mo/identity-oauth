@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Sizes, Colors } from '../Constants';
-import logo from '../logo.svg';
 
-
+const logo = require('../assets/images/old-rocket.png');
 const { MOBILE } = Sizes;
 const { bgGreen, bgBlack } = Colors;
 
@@ -26,7 +25,7 @@ const WrapperDiv = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 135px;
-  padding: 0px 25px;
+  padding: 0px 20px;
   background-color: ${bgBlack};
 `
   
@@ -52,10 +51,11 @@ const MerchantText = styled.div`
   font-weight: 800;
   letter-spacing: 3px;
   color: ${bgGreen};
+  text-overflow: ellipsis;
 
   @media ${MOBILE} {
     letter-spacing: 2px;
-    font-size: 10vmin;
+    font-size: 8vmin;
   }
 `
 
@@ -65,14 +65,15 @@ const ImageWrapper = styled.div`
   align-items: center;
   background-color: rgba(250, 250, 250, 0.7);
   border-radius: 8px;
-  padding: 3px;
+  padding: 9px;
 `
 
 const Image = styled.img`
-  height: 90px;
+  height: 75px;
+  border-radius: 7px;
   
   @media ${MOBILE} {
-    height: 20vmin;
+    height: 19vmin;
   }
 `
 

@@ -126,7 +126,7 @@ const Auth = ({ history, merchant }) => {
 
 
 Auth.defaultProps = {
-  merchant: 'JIGSAW',
+  merchant: 'OLD ROCKET',
 }
 
 Auth.propTypes = {
