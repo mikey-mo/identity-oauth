@@ -13,9 +13,9 @@ const Div = styled.div`
 `
 
 const Text = styled.div`
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 1.5px;
   color: ${Colors.gray1};
 

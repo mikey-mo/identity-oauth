@@ -13,7 +13,7 @@ import { Sizes, Colors, MockData } from '../../Constants';
 
 
 const { DESKTOP, MOBILE } = Sizes;
-const { bgBlack, gray1 } = Colors;
+const { bgBlack, bodyBlack } = Colors;
 
 const BodyDiv = styled.div`
   height: 40vh;
@@ -36,7 +36,7 @@ const FooterDiv = styled.div`
 `
 
 const Body = styled.div`
-  background-color: ${gray1};
+  background-color: ${bodyBlack};
 
   @media ${DESKTOP} {
     display: flex;

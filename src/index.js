@@ -7,6 +7,7 @@ import Auth from './Screens/Auth';
 import Permissions from './Screens/Permissions';
 import Identifiers from './Screens/Identifiers';
 import * as serviceWorker from './serviceWorker';
+import 'typeface-noto-sans-tc';
 
 const navigation = (
   <Router>

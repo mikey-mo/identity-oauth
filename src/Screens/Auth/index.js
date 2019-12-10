@@ -8,10 +8,10 @@ import { Sizes, Colors } from '../../Constants';
 
 
 const { DESKTOP, MOBILE } = Sizes;
-const { white, bgBlack, gray1, gray3 } = Colors;
+const { white, bgBlack, bodyBlack, gray3 } = Colors;
 
 const Body = styled.div`
-  background-color: ${gray1};
+  background-color: ${bodyBlack};
 
   @media ${DESKTOP} {
     display: flex;
@@ -69,7 +69,7 @@ const EnrollWrapper = styled.div`
 `
 
 const EnrollText = styled.div`
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 18px;
   color: ${white};
   letter-spacing: 1px;
@@ -80,7 +80,7 @@ const EnrollText = styled.div`
 `
 
 const MerchantText = styled.div`
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 2px;

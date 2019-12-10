@@ -5,6 +5,7 @@ export default {
 
   black: '#000000',
   bgBlack: '#212121',
+  bodyBlack: '#171717',
 
   gray1: '#CCCCCC',
   gray2: '#909090',

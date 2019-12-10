@@ -9,10 +9,10 @@ import logo from '../../logo.svg';
 
 
 const { DESKTOP, MOBILE } = Sizes;
-const { gray1, gray3, white, bgGreen, bgBlack, errorRed } = Colors;
+const { gray1, gray3, white, bgGreen, bgBlack, bodyBlack, errorRed } = Colors;
 
 const Body = styled.div`
-  background-color: ${gray1};
+  background-color: ${bodyBlack};
 
   @media ${DESKTOP} {
     display: flex;
@@ -63,7 +63,7 @@ const Image = styled.img`
 `
 
 const EnrollText = styled.div`
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 16px;
   color: ${white};
   text-align: center;
@@ -94,7 +94,7 @@ const ButtonWrapper = styled.div`
 `
 
 const ValidationText = styled.div`
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 12px;
   color: ${errorRed};
   text-align: center;
@@ -116,7 +116,7 @@ const Input = styled.input`
   border-radius: 0px;
   box-sizing: border-box;
   -webkit-transition: 0.5s;
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 12px;
   letter-spacing: 2px;
   color: ${bgGreen};
@@ -146,7 +146,7 @@ const Select = styled.select`
   box-sizing: border-box;
   -webkit-transition: 0.5s;
   color: ${bgGreen};
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 12px;
   letter-spacing: 2px;
   background-color: ${bgBlack};
@@ -167,7 +167,7 @@ const NumberFormatWrapper = styled(NumberFormat)`
   box-sizing: border-box;
   border-radius: 0px;
   -webkit-transition: 0.5s;
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 12px;
   letter-spacing: 2px;
   color: ${bgGreen};
