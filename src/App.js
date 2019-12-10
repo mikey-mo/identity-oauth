@@ -11,7 +11,7 @@ import mockData from './Constants/MockData';
 const { code: { userId } } = mockData;
 const { requestCode } = notificationService;
 const { auth: { authIdentifier } } = identityService;
-const { white, bgBlack, gray1, gray3 } = Colors;
+const { bgBlack } = Colors;
 const { DESKTOP, MOBILE } = Sizes;
 
 const Container = styled.div`
@@ -52,17 +52,13 @@ const Input = styled.input`
   width: 50%;
 `
 
-let inputType;
 let inputIdentifier;
 
-function App ({ history }) {
-  const nextPath = (url, params) => {
-    history.push(url, params);
-  }
+function App ({ history, match: { params: { type } } }) {
+  const nextPath = (url, params) => history.push(url, params);
 
   const submit = async () => {
-    const type = inputType.value;
-    const identifier = inputIdentifier.value;
+    const { value: identifier } = inputIdentifier;
 
     const response = await authIdentifier(type, identifier);
 
@@ -80,8 +76,7 @@ function App ({ history }) {
         console.warn('there was a problem');
         console.log(response);
       }
-    }
-    catch (e) {
+    } catch (e) {
       console.log('something went wrong', e);
     }
   }
@@ -91,10 +86,6 @@ function App ({ history }) {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Container>
-            <Input 
-              ref={(el) => { inputType = el; }}
-              placeholder="type"
-            />
             <Input
               ref={(el) => { inputIdentifier = el; }}
               placeholder="identifer"

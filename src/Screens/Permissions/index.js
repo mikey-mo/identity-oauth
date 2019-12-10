@@ -151,7 +151,7 @@ class Permissions extends Component {
         <Policy />
 
         <FooterDiv>
-          <CustomButton text="CANCEL" onClick={() => this.nextPath('/auth/identifiers')} />
+          <CustomButton text="CANCEL" onClick={() => this.nextPath('/auth/cancelled')} />
           <CustomButton primary text="AUTHORIZE" onClick={this.submit} />
         </FooterDiv>
 
