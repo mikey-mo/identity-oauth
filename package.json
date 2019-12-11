@@ -9,6 +9,7 @@
     "react-number-format": "^4.3.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-spinners-kit": "^1.9.0",
     "styled-components": "^4.4.1",
     "typeface-noto-sans-tc": "0.0.71"
   },

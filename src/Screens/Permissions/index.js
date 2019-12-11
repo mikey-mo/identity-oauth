@@ -106,6 +106,7 @@ class Permissions extends Component {
 
   submit = async () => {
     const {
+      toggleLoader,
       history: {
         location: {
           state: {
@@ -115,7 +116,9 @@ class Permissions extends Component {
       },
     } = this.props;
     const { permissions } = this.state;
+
     try {
+      toggleLoader(true);
       const response = await grantAuths(
         identityId,
         permissions.map(({ scope }) => {
@@ -130,8 +133,10 @@ class Permissions extends Component {
   
       if (response.status === 201) this.nextPath("/auth/verified");
       else console.warn('something went wrong', response);
+      toggleLoader(false);
     }
     catch (e) {
+      toggleLoader(false);
       console.warn(e);
     }
   }
