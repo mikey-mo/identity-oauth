@@ -207,7 +207,7 @@ class Verify extends Component {
       const filled = values.length === CODE_LENGTH.length && index === CODE_LENGTH.length - 1;
 
       return (
-        <Box>
+        <Box key={v + index}>
           {values[index]}
           {(selected || filled) && focused && <Outline />}
         </Box>
