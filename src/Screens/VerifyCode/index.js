@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import logo from '../../logo.svg';
+import logo from '../../assets/images/old-rocket.png';
 import { CustomButton } from '../../Components';
 import { Sizes, Colors } from '../../Constants';
 import notificationService from '../../Services/notification';
@@ -12,11 +12,11 @@ import mockData from '../../Constants/MockData';
 const { auth: { addIdentifier } } = identityService;
 const { code: { userId } } = mockData;
 const { DESKTOP, MOBILE } = Sizes;
-const { white, bgBlack, gray1, gray3 } = Colors;
+const { white, bgBlack, bodyBlack, gray3 } = Colors;
 const { verifyCode } = notificationService;
 
 const Body = styled.div`
-  background-color: ${gray1};
+  background-color: ${bodyBlack};
 
   @media ${DESKTOP} {
     display: flex;
@@ -53,12 +53,13 @@ const ImageWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${gray3};
-  border-radius: 4px;
-  padding: 3px;
+  border-radius: 8px;
+  padding: 10px;
 `
 
 const Image = styled.img`
-  height: 130px;
+  height: 120px;
+  border-radius: 8px;
 
   @media ${MOBILE} {
     height: 35vmin;
@@ -73,7 +74,7 @@ const EnrollWrapper = styled.div`
 `
 
 const EnrollText = styled.div`
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 18px;
   color: ${white};
   letter-spacing: 1px;
@@ -84,7 +85,7 @@ const EnrollText = styled.div`
 `
 
 const MerchantText = styled.div`
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -103,7 +104,7 @@ const ButtonWrapper = styled.div`
 const Input = styled.input`
   background: #555A63;
   border: 1px solid #979797;
-  font-family: AppleSDGothicNeo-Regular;
+  font-family: Noto Sans TC;
   font-size: 18px;
   color: #FFFFFF;
   padding: 5px;
@@ -112,7 +113,7 @@ const Input = styled.input`
 `
 
 const AnotherCode = styled.button`
-  font-family: AppleSDGothicNeo-Regular;
+  font-family: Noto Sans TC;
   font-size: 14px;
   color: #B6B6B6;
   letter-spacing: 0.31px;
@@ -194,7 +195,7 @@ class VerifyCode extends Component {
 
 
 VerifyCode.defaultProps = {
-  merchant: 'JIGSAW',
+  merchant: 'OLD ROCKET',
 }
 
 VerifyCode.propTypes = {

@@ -59,11 +59,24 @@ const ImageWrapper = styled.div`
 `
 
 const Image = styled.img`
-  height: 120px;
+  height: 110px;
   border-radius: 8px;
 
   @media ${MOBILE} {
     height: 35vmin;
+  }
+`
+const MerchantText = styled.div`
+  width: 100%;
+  color: ${bgGreen};
+  text-align: center;
+  font-family: Noto Sans TC;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  @media ${MOBILE} {
+    font-size: 9vmin;
   }
 `
 
@@ -83,18 +96,15 @@ const EnrollText = styled.div`
 const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  height: 120px;
+  height: 150px;
   width: 100%;
 `
 
 const ButtonWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  justifyContent: flex-start;
-  align-items: center;
-  height: 200px;
+  justify-content: center;
+  margin-top: 10px;
   width: 80%;
 `
 
@@ -302,14 +312,16 @@ class Identifiers extends Component {
     return (
       <Body>
         <Container>
+          <MerchantText>{'OLD ROCKET'}</MerchantText>
+      
           <ImageWrapper>
             <Image src={logo} alt="AVATAR" />
           </ImageWrapper>
-  
+
           <EnrollText>
             {`PLEASE ENTER YOUR ${typeText} BELOW`}
           </EnrollText>
-  
+
           <FormWrapper>
             { type === 'phone' ?
               <PhoneWrapper>
