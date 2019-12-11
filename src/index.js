@@ -22,9 +22,27 @@ class Navigation extends Component {
     return (
       <div>
         <Router>
-          <Route exact path="/:type" component={Identifiers} />
-          <Route path="/auth/verify" component={VerifyCode} />
-          <Route path="/auth/permissions" component={Permissions} />
+          <Route
+            exact path="/:type"
+            render={() => <Identifiers
+                toggleLoader={this.toggleLoader}
+              />
+            }
+          />
+          <Route
+            path="/auth/verify"
+            render={() => <VerifyCode
+                toggleLoader={this.toggleLoader}
+              />
+            }
+          />
+          <Route
+            path="/auth/permissions"
+            render={() => <Permissions
+                toggleLoader={this.toggleLoader}
+              />
+            }
+          />
           <Route path="/auth/verified"><div><p>Verified</p></div></Route>
           <Route path="/auth/cancelled"><div><p>Cancelled</p></div></Route>
         </Router>

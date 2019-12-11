@@ -133,21 +133,34 @@ class VerifyCode extends Component {
 
   verifyCode = async () => {
     const { value } = this.state;
-    const { history: { location: { state: { type, identifier } } } } = this.props;
+    const {
+      toggleLoader,
+      history: {
+        location: {
+          state: {
+            type,
+            identifier,
+          },
+        },
+      },
+    } = this.props;
 
     try {
+      toggleLoader(true);
       const response = await verifyCode({ code: value, userId });
       if (response.status === 200) {
         const data = await addIdentifier(type, identifier);
         if (data.status === 200) {
           const { data: { identity: { id } } } = data; 
-          this.nextPath("/auth/permissions", { identityId: id });          
+          this.nextPath("/auth/permissions", { identityId: id });     
         }
       }
       else console.warn('there was a problem', response);
+      toggleLoader(false);
     }
     catch (e) {
       console.warn('something went wrong', e);
+      toggleLoader(false);
     }
   }
 
