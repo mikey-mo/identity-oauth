@@ -13,7 +13,8 @@ const requestCode = async ({ type, identifier, userId }) => {
               identifier,
               userId,
             },
-          });
+          })
+          .catch(error => error.response);
     }
     catch (e) {
         console.log('error', e);
@@ -30,7 +31,8 @@ const verifyCode = async ({ code, userId }) => {
                 code,
                 userId,
             },
-        });
+        })
+        .catch(error => error.response);
     }
     catch (e) {
         console.log('error', e);

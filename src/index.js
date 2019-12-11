@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
-import App from './App';
-import Auth from './Screens/Auth';
 import Identifiers from './Screens/Identifiers';
 import Permissions from './Screens/Permissions';
 import VerifyCode from './Screens/VerifyCode';

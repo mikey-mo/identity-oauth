@@ -10,7 +10,8 @@ const authIdentifier = async (type, identifier) => {
             method: 'get',
             url: `${authUrl}${version}auth/identifiers/${type}/${identifier}`,
             headers: { consumer },
-         });
+         })
+         .catch(error => error.response);
     }
     catch (e) {
         console.warn(e);
@@ -25,7 +26,8 @@ const addIdentifier = async (type, identifier) => {
             url: `${authUrl}${version}auth/identifiers`,
             data: { type: type, value: identifier },
             headers: { 'content-type': 'application/json' },
-        });
+        })
+        .catch(error => error.response);
     }
     catch (e) {
         console.warn(e);
@@ -38,7 +40,8 @@ const getPermissions = async () => {
         return await axios({
             method: 'get',
             url: `${authUrl}${version}auth/permissions/${consumer}`,
-        });
+        })
+        .catch(error => error.response);
     }
     catch (e) {
         console.warn(e);
@@ -56,7 +59,8 @@ const grantAuths = async (identity, grants) => {
                 consumer,
                 grants,
             },
-        });
+        })
+        .catch(error => error.response);
     }
     catch (e) {
         console.warn(e);

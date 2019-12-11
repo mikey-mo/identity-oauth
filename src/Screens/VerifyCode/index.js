@@ -1,22 +1,20 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import logo from '../../logo.svg';
-import { CustomButton } from '../../Components';
 import { Sizes, Colors } from '../../Constants';
 import notificationService from '../../Services/notification';
 import identityService from '../../Services/identity';
 import mockData from '../../Constants/MockData';
 
+const CODE_LENGTH = new Array(6).fill(0);
+const { verifyCode } = notificationService;
 const { auth: { addIdentifier } } = identityService;
 const { code: { userId } } = mockData;
 const { DESKTOP, MOBILE } = Sizes;
-const { white, bgBlack, gray1, gray3 } = Colors;
-const { verifyCode } = notificationService;
+const { gray1, gray2, white, bgGreen, bgBlack, bodyBlack, errorRed } = Colors;
 
 const Body = styled.div`
-  background-color: ${gray1};
+  background-color: ${bodyBlack};
 
   @media ${DESKTOP} {
     display: flex;
@@ -24,21 +22,22 @@ const Body = styled.div`
     justify-content: center;
     align-items: center;
   }
-  
+
   @media ${MOBILE} {
-    height: ${window.innerHeight}px;
+    height: 100vh;
   }
 `
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
   background-color: ${bgBlack};
-
+  
   @media ${DESKTOP} {
-    width: 500px;
-    height: 450px;
+    width: 450px;
+    height: 350px;
     overflow: hidden;
     box-shadow: 2px 2px 6px black;
   }
@@ -48,170 +47,232 @@ const Container = styled.div`
   }
 `
 
-const ImageWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${gray3};
-  border-radius: 4px;
-  padding: 3px;
-`
-
-const Image = styled.img`
-  height: 130px;
-
-  @media ${MOBILE} {
-    height: 35vmin;
-  }
-`
-
-const EnrollWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
 const EnrollText = styled.div`
-  font-family: Verdana;
-  font-size: 18px;
+  font-family: Noto Sans TC;
+  font-size: 16px;
   color: ${white};
-  letter-spacing: 1px;
+  text-align: center;
+  letter-spacing: 2px;
+  width: 95%;
 
   @media ${MOBILE} {
     font-size 5vmin;
   }
 `
 
-const MerchantText = styled.div`
-  font-family: Verdana;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: ${white};
-`
-
-const ButtonWrapper = styled.div`
+const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
-  height: 110px;
-  width: 100%;
+  height: 100px;
+`
+
+const Box = styled.div`
+  border-right: 1px solid ${gray1};
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  position: relative;
+  color: ${bgGreen};
+
+  @media ${MOBILE} {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+
+  &:last-child {
+    border-right: none;
+  }
+`
+
+const Wrapper = styled.div`
+  border: 1px solid ${gray1};
+  display: inline-block;
+  position: relative;
+  display: flex;
 `
 
 const Input = styled.input`
-  background: #555A63;
-  border: 1px solid #979797;
-  font-family: AppleSDGothicNeo-Regular;
-  font-size: 18px;
-  color: #FFFFFF;
-  padding: 5px;
-  letter-spacing: 0.39px;
-  width: 50%;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: ${({ selectedIndex }) => selectedIndex * 60}px;
+  width: 60px;
+  opacity: ${({ hideInput }) => hideInput ? 0 : 1};
+  border: none;
+  font-size: 40px;
+  text-align: center;
+  background-color: transparent;
+  outline: none;
+  color: ${bgGreen};
+
+  @media ${MOBILE} {
+    font-size: 24px;
+    width: 40px;
+    left: ${({ selectedIndex }) => selectedIndex * 40}px;
+  }
+`
+
+const Outline = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  box-shadow: 0 0 0 4px ${bgGreen};
+`
+
+const ValidationText = styled.div`
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  color: ${errorRed};
+  text-align: center;
+  letter-spacing: 2px;
+  width: 95%;
+  margin-top: 13px;
+
+  @media ${MOBILE} {
+    font-size 3.2vmin;
+  }
 `
 
 const AnotherCode = styled.button`
-  font-family: AppleSDGothicNeo-Regular;
+  font-family: Noto Sans TC;
   font-size: 14px;
-  color: #B6B6B6;
-  letter-spacing: 0.31px;
+  color: ${gray2};
+  letter-spacing: 2px;
   background: none;
   border: none;
-  margin-top: 10px;
+  margin-bottom: 10px;
 `
 
-class VerifyCode extends Component {
-  state = { value: '', errorMsg: '' };
+
+class Verify extends Component {
+  input = React.createRef();
+  state = {
+    value: '',
+    focused: false,
+    isNotValid: false,
+  };
 
   nextPath = (url, params) => {
     const { history } = this.props; 
     history.push(url, params)
   }
 
-  onInputChange = ({ target: { value } }) => this.setState({ value });
+  handleClick = () => {
+    this.input.current.focus();
+  }
+
+  handleFocus = () => {
+    this.setState({ focused: true });
+  }
+
+  handleBlur = () => {
+    this.setState({ focused: false });
+  }
+
+  handleChange = e => {
+    const value = e.target.value;
+
+    this.setState(state => {
+      if (state.value.length >= CODE_LENGTH.length) return null;
+      return {
+        value: (state.value + value).slice(0, CODE_LENGTH.length),
+      };
+    }, () => {
+      if (this.state.value.length === 6){
+        this.verifyCode();
+      }
+    });
+  }
+
+  handleKeyUp = e => {
+    if (e.key === "Backspace") {
+      this.setState(state => {
+        return {
+          value: state.value.slice(0, state.value.length - 1),
+        };
+      });
+    }
+  };
+
+  renderBox = (values, focused) => {    
+    return CODE_LENGTH.map((v, index) => {
+      const selected = values.length === index;
+      const filled = values.length === CODE_LENGTH.length && index === CODE_LENGTH.length - 1;
+
+      return (
+        <Box key={v + index}>
+          {values[index]}
+          {(selected || filled) && focused && <Outline />}
+        </Box>
+      );
+    })
+  }
 
   verifyCode = async () => {
     const { value } = this.state;
-    const {
-      toggleLoader,
-      history: {
-        location: {
-          state: {
-            type,
-            identifier,
-          },
-        },
-      },
-    } = this.props;
+    const { history: { location: { state: { type, identifier } } } } = this.props;
 
     try {
-      toggleLoader(true);
       const response = await verifyCode({ code: value, userId });
       if (response.status === 200) {
         const data = await addIdentifier(type, identifier);
         if (data.status === 200) {
           const { data: { identity: { id } } } = data; 
-          this.nextPath("/auth/permissions", { identityId: id });     
+          this.nextPath("/auth/permissions", { identityId: id });          
         }
+      } else {
+        console.warn('there was a problem', response);
+        if (response.data.error.description === 'code not valid') this.setState({ isNotValid: true })
       }
-      else console.warn('there was a problem', response);
-      toggleLoader(false);
     }
     catch (e) {
       console.warn('something went wrong', e);
-      toggleLoader(false);
     }
   }
 
-  render () {
-    const { merchant } = this.props;
-    const { value } = this.state;
+  render() {
+    const { value, focused, isNotValid } = this.state;
+    const values = value.split("");
+    const selectedIndex = values.length < CODE_LENGTH.length ? values.length : CODE_LENGTH.length - 1;
+    const hideInput = !(values.length < CODE_LENGTH.length);
 
     return (
       <Body>
         <Container>
+  
+          <EnrollText>ENTER YOUR VERIFICATION CODE BELOW</EnrollText>
 
-          <ImageWrapper>
-            <Image src={logo} alt="AVATAR" />
-          </ImageWrapper>
+          <InputContainer>
+            <Wrapper onClick={this.handleClick}>
+              <Input
+                value=""
+                ref={this.input}
+                onChange={this.handleChange}
+                onKeyUp={this.handleKeyUp}
+                onFocus={this.handleFocus}
+                onBlur={this.handleBlur}
+                selectedIndex={selectedIndex}
+                hideInput={hideInput}
+              />
+              { this.renderBox(values, focused) }
+            </Wrapper>
 
-          <EnrollWrapper>
-            <EnrollText>ENROLL WITH&nbsp;</EnrollText>
-            <MerchantText>{`${merchant.toUpperCase()}`}</MerchantText>
-          </EnrollWrapper>
+            { isNotValid && <ValidationText>{`CODE IS INCORRECT`}</ValidationText> }
+          </InputContainer>
 
-          <Input 
-            placeholder="456123"
-            value={value}
-            onChange={this.onInputChange}
-            type="number"
-            maxlength="6"
-          />
-
-          <ButtonWrapper>
-            <CustomButton
-              primary
-              width="80%"
-              onClick={this.verifyCode}
-              text="SUBMIT"
-            />
-            <AnotherCode>Send Another Code</AnotherCode>
-          </ButtonWrapper>
-
+          <AnotherCode>SEND NEW CODE</AnotherCode>
         </Container>
       </Body>
-    )
+    );
   }
 }
 
-
-VerifyCode.defaultProps = {
-  merchant: 'JIGSAW',
-}
-
-VerifyCode.propTypes = {
-  merchant: PropTypes.string,
-}
-
-export default withRouter(VerifyCode);
+export default withRouter(Verify);
