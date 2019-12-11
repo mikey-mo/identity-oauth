@@ -10,9 +10,12 @@ const Button = styled.button`
   height: 44px;
   width: ${({ width }) => width || '130px'};
   cursor: pointer;
-  border: none;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: ${({ primary }) => primary ? bgGreen : bgBlack};
   outline: 0;
-  background-color: ${({ primary }) => primary ? bgGreen : bgBlack};
+  background-color: ${bgBlack};
 
   @media ${DESKTOP} {
     &:hover {
@@ -31,8 +34,8 @@ const Button = styled.button`
 `
 
 const Div = styled.div`
-  color: ${props => props.primary ? bgBlack : white};
-  font-family: Verdana;
+  color: ${props => props.primary ? bgGreen : white};
+  font-family: Noto Sans TC;
   font-size: 10px;
   font-weight: ${props => props.primary ? '700' : '400'};
   text-align: center;

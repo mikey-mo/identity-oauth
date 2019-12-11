@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Sizes, Colors } from '../Constants';
-import logo from '../logo.svg';
+import check from '../assets/images/check.svg';
 
 const { MOBILE } = Sizes;
 
@@ -16,7 +16,7 @@ const Image = styled.img`
   height: 40px;
 
   @media ${MOBILE} {
-    height: 10.5vmin;
+    height: 10vmin;
   }
 `
 
@@ -32,7 +32,7 @@ const WrapperDiv = styled.div`
 
 const ReqText = styled.div`
   color: ${Colors.white};
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 12px;
   margin-bottom: 5px;
   letter-spacing: 1.5px;
@@ -44,7 +44,7 @@ const ReqText = styled.div`
 `
 
 const ResText = styled.div`
-  font-family: Verdana;
+  font-family: Noto Sans TC;
   font-size: 12px;
   letter-spacing: 1.5px;
   color: #545454;
@@ -56,7 +56,8 @@ const ResText = styled.div`
 
 const LineItem = ({ request, response }) => (
   <ContainerDiv>
-    <Image src={logo} alt="IMAGE" />
+    <Image src={check} alt="IMAGE" />
+    {/* <Image src={logo} alt="IMAGE" /> */}
     <WrapperDiv>
       <ReqText>{request.toUpperCase()}</ReqText>
       <ResText>{response.toUpperCase()}</ResText>

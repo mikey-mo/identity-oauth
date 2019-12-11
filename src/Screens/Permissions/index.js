@@ -14,7 +14,7 @@ import identityService from '../../Services/identity';
 
 const { auth: { getPermissions, grantAuths } } = identityService;
 const { DESKTOP, MOBILE } = Sizes;
-const { bgBlack, gray1 } = Colors;
+const { bgBlack, bodyBlack } = Colors;
 
 const BodyDiv = styled.div`
   height: 40vh;
@@ -37,7 +37,7 @@ const FooterDiv = styled.div`
 `
 
 const Body = styled.div`
-  background-color: ${gray1};
+  background-color: ${bodyBlack};
 
   @media ${DESKTOP} {
     display: flex;
@@ -47,7 +47,7 @@ const Body = styled.div`
   }
 
   @media ${MOBILE} {
-    height: ${window.innerHeight}px;
+    height: 100vh;
   }
 `
 
@@ -141,10 +141,10 @@ class Permissions extends Component {
       <Body>
       <Container>
 
-        <Header merchant="JIGSAW" />
+        <Header merchant="OLD ROCKET" />
 
         <BodyDiv>
-          <Banner merchant="JIGSAW" />
+          <Banner merchant="OLD ROCKET" />
           {this.list()}
         </BodyDiv>
 
