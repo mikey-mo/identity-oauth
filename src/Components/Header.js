@@ -51,7 +51,10 @@ const MerchantText = styled.div`
   font-weight: 800;
   letter-spacing: 3px;
   color: ${bgGreen};
+  white-space: nowrap;  
+  overflow: hidden; 
   text-overflow: ellipsis;
+  max-width: 8em;
 
   @media ${MOBILE} {
     letter-spacing: 2px;
@@ -63,7 +66,7 @@ const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(250, 250, 250, 0.7);
+  background-color: rgba(250, 250, 250, 0.2);
   border-radius: 8px;
   padding: 9px;
 `
