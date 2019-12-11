@@ -102,16 +102,6 @@ const ButtonWrapper = styled.div`
   width: 80%;
 `
 
-// const Input = styled.input`
-//   background: #555A63;
-//   border: 1px solid #979797;
-//   font-family: Noto Sans TC;
-//   font-size: 18px;
-//   color: #FFFFFF;
-//   padding: 5px;
-//   letter-spacing: 0.39px;
-//   width: 50%;
-// `
 const Input = styled.input`
   width: 60%;
   padding: 12px 20px;

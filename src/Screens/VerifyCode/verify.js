@@ -6,8 +6,11 @@ import identityService from '../../Services/identity';
 import mockData from '../../Constants/MockData';
 
 const CODE_LENGTH = new Array(6).fill(0);
+const { verifyCode } = notificationService;
+const { auth: { addIdentifier } } = identityService;
+const { code: { userId } } = mockData;
 const { DESKTOP, MOBILE } = Sizes;
-const { gray1, gray3, white, bgGreen, bgBlack, bodyBlack, errorRed } = Colors;
+const { gray1, gray2, white, bgGreen, bgBlack, bodyBlack, errorRed } = Colors;
 
 const Body = styled.div`
   background-color: ${bodyBlack};
@@ -43,7 +46,28 @@ const Container = styled.div`
   }
 `
 
-const Display = styled.div`
+const EnrollText = styled.div`
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  color: ${white};
+  text-align: center;
+  letter-spacing: 2px;
+  width: 95%;
+
+  @media ${MOBILE} {
+    font-size 5vmin;
+  }
+`
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100px;
+`
+
+const Box = styled.div`
   border-right: 1px solid ${gray1};
   width: 60px;
   height: 60px;
@@ -54,12 +78,18 @@ const Display = styled.div`
   position: relative;
   color: ${bgGreen};
 
+  @media ${MOBILE} {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+
   &:last-child {
     border-right: none;
   }
 `
 
-const Wrap = styled.div`
+const Wrapper = styled.div`
   border: 1px solid ${gray1};
   display: inline-block;
   position: relative;
@@ -68,12 +98,23 @@ const Wrap = styled.div`
 
 const Input = styled.input`
   position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: ${({ selectedIndex }) => selectedIndex * 60}px;
+  width: 60px;
+  opacity: ${({ hideInput }) => hideInput ? 0 : 1};
   border: none;
   font-size: 40px;
   text-align: center;
   background-color: transparent;
   outline: none;
   color: ${bgGreen};
+
+  @media ${MOBILE} {
+    font-size: 24px;
+    width: 40px;
+    left: ${({ selectedIndex }) => selectedIndex * 40}px;
+  }
 `
 
 const Outline = styled.div`
@@ -85,13 +126,43 @@ const Outline = styled.div`
   box-shadow: 0 0 0 4px ${bgGreen};
 `
 
+const ValidationText = styled.div`
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  color: ${errorRed};
+  text-align: center;
+  letter-spacing: 2px;
+  width: 95%;
+  margin-top: 13px;
+
+  @media ${MOBILE} {
+    font-size 3.2vmin;
+  }
+`
+
+const AnotherCode = styled.button`
+  font-family: Noto Sans TC;
+  font-size: 14px;
+  color: ${gray2};
+  letter-spacing: 2px;
+  background: none;
+  border: none;
+  margin-bottom: 10px;
+`
+
 
 class Verify extends Component {
   input = React.createRef();
   state = {
     value: '',
     focused: false,
+    isNotValid: false,
   };
+
+  nextPath = (url, params) => {
+    const { history } = this.props; 
+    history.push(url, params)
+  }
 
   handleClick = () => {
     this.input.current.focus();
@@ -107,11 +178,16 @@ class Verify extends Component {
 
   handleChange = e => {
     const value = e.target.value;
+
     this.setState(state => {
       if (state.value.length >= CODE_LENGTH.length) return null;
       return {
         value: (state.value + value).slice(0, CODE_LENGTH.length),
       };
+    }, () => {
+      if (this.state.value.length === 6){
+        this.verifyCode();
+      }
     });
   }
 
@@ -125,22 +201,44 @@ class Verify extends Component {
     }
   };
 
-  renderInputs = (values, focused) => {    
+  renderBox = (values, focused) => {    
     return CODE_LENGTH.map((v, index) => {
       const selected = values.length === index;
       const filled = values.length === CODE_LENGTH.length && index === CODE_LENGTH.length - 1;
 
       return (
-        <Display>
+        <Box>
           {values[index]}
           {(selected || filled) && focused && <Outline />}
-        </Display>
+        </Box>
       );
     })
   }
 
+  verifyCode = async () => {
+    const { value } = this.state;
+    const { history: { location: { state: { type, identifier } } } } = this.props;
+
+    try {
+      const response = await verifyCode({ code: value, userId });
+      if (response.status === 200) {
+        const data = await addIdentifier(type, identifier);
+        if (data.status === 200) {
+          const { data: { identity: { id } } } = data; 
+          this.nextPath("/auth/permissions", { identityId: id });          
+        }
+      } else {
+        console.warn('there was a problem', response);
+        if (response.data.error.description === 'code not valid') this.setState({ isNotValid: true })
+      }
+    }
+    catch (e) {
+      console.warn('something went wrong', e);
+    }
+  }
+
   render() {
-    const { value, focused } = this.state;
+    const { value, focused, isNotValid } = this.state;
     const values = value.split("");
     const selectedIndex = values.length < CODE_LENGTH.length ? values.length : CODE_LENGTH.length - 1;
     const hideInput = !(values.length < CODE_LENGTH.length);
@@ -148,27 +246,32 @@ class Verify extends Component {
     return (
       <Body>
         <Container>
-          <Wrap onClick={this.handleClick}>
-            <Input
-              value=""
-              ref={this.input}
-              onChange={this.handleChange}
-              onKeyUp={this.handleKeyUp}
-              onFocus={this.handleFocus}
-              onBlur={this.handleBlur}
-              style={{
-                width: "60px",
-                top: "0px",
-                bottom: "0px",
-                left: `${selectedIndex * 60}px`,
-                opacity: hideInput ? 0 : 1,
-              }}
-            />
-            { this.renderInputs(values, focused) }
-          </Wrap>
+  
+          <EnrollText>ENTER YOUR VERIFICATION CODE BELOW</EnrollText>
+
+          <InputContainer>
+            <Wrapper onClick={this.handleClick}>
+              <Input
+                value=""
+                ref={this.input}
+                onChange={this.handleChange}
+                onKeyUp={this.handleKeyUp}
+                onFocus={this.handleFocus}
+                onBlur={this.handleBlur}
+                selectedIndex={selectedIndex}
+                hideInput={hideInput}
+              />
+              { this.renderBox(values, focused) }
+            </Wrapper>
+
+            { isNotValid && <ValidationText>{`CODE IS INCORRECT`}</ValidationText> }
+          </InputContainer>
+
+          <AnotherCode>SEND NEW CODE</AnotherCode>
         </Container>
       </Body>
     );
   }
 }
+
 export default Verify;

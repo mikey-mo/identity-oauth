@@ -297,7 +297,7 @@ class Identifiers extends Component {
   }
 
   render() {
-    const { type, country, isNotValid } = this.state;
+    const { type, country, isNotValid, emailRawValue, phoneRawValue } = this.state;
 
     const typeText = type === 'email' ?
     'EMAIL' :
@@ -331,6 +331,7 @@ class Identifiers extends Component {
                 <NumberFormatWrapper format={format} placeholder={placeholder} onValueChange={this.onPhoneChange} />
               </PhoneWrapper> :
               <Input
+                value={type === 'email' ? emailRawValue : phoneRawValue}
                 type="text"
                 onChange={this.onEmailChange}
                 placeholder="jimmysupreme@gmail.com"
