@@ -103,6 +103,8 @@ const FormWrapper = styled.div`
 
 const ButtonWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   margin-top: 10px;
   width: 80%;
@@ -115,10 +117,10 @@ const ValidationText = styled.div`
   text-align: center;
   letter-spacing: 2px;
   width: 95%;
-  margin-top: 14px;
+  margin-top: 13px;
 
   @media ${MOBILE} {
-    font-size 2.8vmin;
+    font-size 3.2vmin;
   }
 `
 

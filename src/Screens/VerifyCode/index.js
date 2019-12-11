@@ -12,7 +12,7 @@ import mockData from '../../Constants/MockData';
 const { auth: { addIdentifier } } = identityService;
 const { code: { userId } } = mockData;
 const { DESKTOP, MOBILE } = Sizes;
-const { white, bgBlack, bodyBlack, gray3 } = Colors;
+const { white, bgBlack, bgGreen, bodyBlack, gray1, gray3 } = Colors;
 const { verifyCode } = notificationService;
 
 const Body = styled.div`
@@ -26,7 +26,7 @@ const Body = styled.div`
   }
   
   @media ${MOBILE} {
-    height: ${window.innerHeight}px;
+    height: 100vh;
   }
 `
 const Container = styled.div`
@@ -58,7 +58,7 @@ const ImageWrapper = styled.div`
 `
 
 const Image = styled.img`
-  height: 120px;
+  height: 110px;
   border-radius: 8px;
 
   @media ${MOBILE} {
@@ -66,18 +66,13 @@ const Image = styled.img`
   }
 `
 
-const EnrollWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
 const EnrollText = styled.div`
   font-family: Noto Sans TC;
-  font-size: 18px;
+  font-size: 16px;
   color: ${white};
-  letter-spacing: 1px;
+  text-align: center;
+  letter-spacing: 2px;
+  width: 95%;
 
   @media ${MOBILE} {
     font-size 5vmin;
@@ -85,11 +80,17 @@ const EnrollText = styled.div`
 `
 
 const MerchantText = styled.div`
+  width: 100%;
+  color: ${bgGreen};
+  text-align: center;
   font-family: Noto Sans TC;
-  font-size: 18px;
+  font-size: 30px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: ${white};
+
+  @media ${MOBILE} {
+    font-size: 9vmin;
+  }
 `
 
 const ButtonWrapper = styled.div`
@@ -98,18 +99,42 @@ const ButtonWrapper = styled.div`
   justify-content: flex-end;
   align-items: center;
   height: 110px;
-  width: 100%;
+  width: 80%;
 `
 
+// const Input = styled.input`
+//   background: #555A63;
+//   border: 1px solid #979797;
+//   font-family: Noto Sans TC;
+//   font-size: 18px;
+//   color: #FFFFFF;
+//   padding: 5px;
+//   letter-spacing: 0.39px;
+//   width: 50%;
+// `
 const Input = styled.input`
-  background: #555A63;
-  border: 1px solid #979797;
+  width: 60%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid ${gray1};
+  border-radius: 0px;
+  box-sizing: border-box;
+  -webkit-transition: 0.5s;
   font-family: Noto Sans TC;
-  font-size: 18px;
-  color: #FFFFFF;
-  padding: 5px;
-  letter-spacing: 0.39px;
-  width: 50%;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: ${bgGreen};
+  background-color: ${bgBlack};
+  outline: none;
+
+  &:focus {
+    border: 1px solid ${bgGreen};
+  }
+
+  @media ${MOBILE} {
+    width: 80%;
+  }
 `
 
 const AnotherCode = styled.button`
@@ -159,15 +184,13 @@ class VerifyCode extends Component {
     return (
       <Body>
         <Container>
-
+          <MerchantText>{`${merchant.toUpperCase()}`}</MerchantText>
+    
           <ImageWrapper>
             <Image src={logo} alt="AVATAR" />
           </ImageWrapper>
 
-          <EnrollWrapper>
-            <EnrollText>ENROLL WITH&nbsp;</EnrollText>
-            <MerchantText>{`${merchant.toUpperCase()}`}</MerchantText>
-          </EnrollWrapper>
+          <EnrollText>ENTER YOUR VERIFICATION CODE BELOW</EnrollText>
 
           <Input 
             placeholder="456123"
