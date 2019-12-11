@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import NumberFormat from 'react-number-format';
 import { Sizes, Colors, CountryCode } from '../../Constants';
 import { CustomButton } from '../../Components';
-import logo from '../../logo.svg';
+import logo from '../../assets/images/old-rocket.png';
+import identityService from '../../Services/identity';
+import notificationService from '../../Services/notification';
+import mockData from '../../Constants/MockData';
 
-
+const { code: { userId } } = mockData;
+const { requestCode } = notificationService;
+const { auth: { authIdentifier } } = identityService;
 const { DESKTOP, MOBILE } = Sizes;
 const { gray1, gray3, white, bgGreen, bgBlack, bodyBlack, errorRed } = Colors;
 
@@ -50,12 +54,13 @@ const ImageWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${gray3};
-  border-radius: 4px;
-  padding: 3px;
+  border-radius: 8px;
+  padding: 10px;
 `
 
 const Image = styled.img`
-  height: 130px;
+  height: 120px;
+  border-radius: 8px;
 
   @media ${MOBILE} {
     height: 35vmin;
@@ -100,7 +105,7 @@ const ValidationText = styled.div`
   text-align: center;
   letter-spacing: 2px;
   width: 95%;
-  margin-top: 20px;
+  margin-top: 14px;
 
   @media ${MOBILE} {
     font-size 2.8vmin;
@@ -183,58 +188,17 @@ const NumberFormatWrapper = styled(NumberFormat)`
   }
 `
 
-class Identifiers extends React.Component {
+class Identifiers extends Component {
   constructor(props) {
     super();
 
     this.state = {
-      identifier: props.location.identifier || 'EMAIL',
+      type: props.match.params.type,
       country: 'us',
       isNotValid: false,
       phoneRawValue: '',
       emailRawValue: '',
     };
-  }
-
-  nextPath = (param) => {
-    const { history } = this.props;
-
-    history.push(param)
-  };
-
-  onSubmit = () => {
-    const { phoneRawValue, emailRawValue, identifier } = this.state;
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (identifier === 'EMAIL') {
-      if (re.test(String(emailRawValue).toLowerCase())) {
-        this.nextPath('/auth/permissions');
-      } else {
-        this.setState({ isNotValid: true });
-      }
-    }
-
-    if (identifier === 'PHONE NUMBER') {
-      if (phoneRawValue.length === 10) {
-        this.nextPath('/auth/permissions');
-      } else {
-        this.setState({ isNotValid: true });
-      }
-
-    }
-
-  }
-
-  onEmailChange = (event) => {
-    this.setState({ emailRawValue: event.target.value })
-  }
-
-  onPhoneChange = (event) => {
-    this.setState({ phoneRawValue: event.value })
-  }
-  
-  onCountryChange = (event) => {
-    this.setState({ country: event.target.value })
   }
 
   renderOptions = () => {
@@ -252,8 +216,80 @@ class Identifiers extends React.Component {
     )
   }
 
+  nextPath = (url, params) => {
+    const { history } = this.props;
+    history.push(url, params);
+  };
+
+  onEmailChange = (event) => {
+    this.setState({ emailRawValue: event.target.value })
+  }
+
+  onPhoneChange = (event) => {
+    this.setState({ phoneRawValue: event.value })
+  }
+  
+  onCountryChange = (event) => {
+    this.setState({ country: event.target.value })
+  }
+
+  sendNotification = async (type, identifier) => {
+    try {
+      const response = await requestCode({ type, identifier, userId });
+      if (response.status === 200) this.nextPath("/auth/verify", { type, identifier });
+      else {
+        console.warn('there was a problem');
+        console.log(response);
+      }
+    } catch (e) {
+      console.log('something went wrong', e);
+    }
+  }
+
+  onSubmit = async () => {
+    const { type, emailRawValue, phoneRawValue } = this.state;
+    // const identifier = type === 'email' ? emailRawValue : phoneRawValue;
+    let identifier;
+
+    if (type === 'email') {
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      identifier = emailRawValue;
+
+      if (re.test(String(emailRawValue).toLowerCase())) {
+        const response = await authIdentifier(type, identifier);
+
+        if (response.status === 200 && !response.data.needsAuth) {
+          this.nextPath('/auth/verified', {})
+          // this will be a callback to the main app calling this
+        } else this.sendNotification(type, identifier);
+      } else {
+        this.setState({ isNotValid: true });
+      }
+    }
+
+    if (type === 'phone') {
+      identifier = phoneRawValue;
+      if (phoneRawValue.length === 10) {
+        const response = await authIdentifier(type, identifier);
+
+        if (response.status === 200 && !response.data.needsAuth) {
+          this.nextPath('/auth/verified', {})
+          // this will be a callback to the main app calling this
+        } else this.sendNotification(type, identifier);
+      } else {
+        this.setState({ isNotValid: true });
+      }
+    }
+
+  }
+
   render() {
-    const { identifier, country, isNotValid } = this.state;
+    const { type, country, isNotValid } = this.state;
+
+    const typeText = type === 'email' ?
+    'EMAIL' :
+    'PHONE NUMBER';
 
     let placeholder = '(555) 555-5555';
     let format = '(###) ###-####';
@@ -271,11 +307,11 @@ class Identifiers extends React.Component {
           </ImageWrapper>
   
           <EnrollText>
-            {`PLEASE ENTER YOUR ${identifier} BELOW`}
+            {`PLEASE ENTER YOUR ${typeText} BELOW`}
           </EnrollText>
   
           <FormWrapper>
-            { identifier === 'PHONE NUMBER' ?
+            { type === 'phone' ?
               <PhoneWrapper>
                 {this.renderOptions()}
                 <NumberFormatWrapper format={format} placeholder={placeholder} onValueChange={this.onPhoneChange} />
@@ -289,7 +325,7 @@ class Identifiers extends React.Component {
             <ButtonWrapper>
               <CustomButton primary onClick={this.onSubmit} text="SUBMIT"/>
               {
-                isNotValid && <ValidationText>{`PLEASE MAKE SURE YOU HAVE ENTERED YOUR ${identifier} CORRECTLY`}</ValidationText>
+                isNotValid && <ValidationText>{`PLEASE MAKE SURE YOU HAVE ENTERED YOUR ${typeText} CORRECTLY`}</ValidationText>
               }
             </ButtonWrapper>
           </FormWrapper>
@@ -299,14 +335,5 @@ class Identifiers extends React.Component {
     )
   }
 }
-
-
-Identifiers.defaultProps = {
-  location: {},
-};
-
-Identifiers.propTypes = {
-  location: PropTypes.shape({}),
-};
 
 export default withRouter(Identifiers);

@@ -5,7 +5,7 @@ import { Sizes, Colors } from '../Constants';
 
 const logo = require('../assets/images/old-rocket.png');
 const { MOBILE } = Sizes;
-const { bgGreen, bgBlack } = Colors;
+const { bgGreen, bgBlack, gray3 } = Colors;
 
 
 const Container = styled.div`
@@ -66,7 +66,7 @@ const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(250, 250, 250, 0.2);
+  background-color: ${gray3};
   border-radius: 8px;
   padding: 9px;
 `
