@@ -246,6 +246,8 @@ class Identifiers extends Component {
   }
 
   sendNotification = async (type, identifier) => {
+    const { toggleLoader } = this.props;
+
     try {
       const response = await requestCode({ type, identifier, userId });
       if (response.status === 200) this.nextPath("/auth/verify", { type, identifier });
@@ -253,13 +255,16 @@ class Identifiers extends Component {
         console.warn('there was a problem');
         console.log(response);
       }
+      toggleLoader(false);
     } catch (e) {
+      toggleLoader(false);
       console.log('something went wrong', e);
     }
   }
 
   onSubmit = async () => {
     const { type, emailRawValue, phoneRawValue } = this.state;
+    const { toggleLoader } = this.props;
     // const identifier = type === 'email' ? emailRawValue : phoneRawValue;
     let identifier;
 
@@ -269,9 +274,11 @@ class Identifiers extends Component {
       identifier = emailRawValue;
 
       if (re.test(String(emailRawValue).toLowerCase())) {
+        toggleLoader(true);
         const response = await authIdentifier(type, identifier);
 
         if (response.status === 200 && !response.data.needsAuth) {
+          toggleLoader(true);
           this.nextPath('/auth/verified', {})
           // this will be a callback to the main app calling this
         } else this.sendNotification(type, identifier);
