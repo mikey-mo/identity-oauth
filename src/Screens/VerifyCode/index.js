@@ -48,7 +48,7 @@ const Container = styled.div`
 `
 
 const EnrollText = styled.div`
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 16px;
   color: ${white};
   text-align: center;
@@ -128,7 +128,7 @@ const Outline = styled.div`
 `
 
 const ValidationText = styled.div`
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 12px;
   color: ${errorRed};
   text-align: center;
@@ -142,7 +142,7 @@ const ValidationText = styled.div`
 `
 
 const AnotherCode = styled.button`
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 14px;
   color: ${gray2};
   letter-spacing: 2px;

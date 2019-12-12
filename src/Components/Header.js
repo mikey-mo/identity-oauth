@@ -37,7 +37,7 @@ const MerchantWrapper = styled.div`
 const ServiceText = styled.div`
   color: ${bgGreen};
   font-size: 14px;
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   letter-spacing: 1.5px;
 
   @media ${MOBILE} {
@@ -47,7 +47,7 @@ const ServiceText = styled.div`
 
 const MerchantText = styled.div`
   font-size: 44px;
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-weight: 800;
   letter-spacing: 3px;
   color: ${bgGreen};
