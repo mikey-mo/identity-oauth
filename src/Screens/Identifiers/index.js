@@ -135,11 +135,14 @@ const Input = styled.input`
   box-sizing: border-box;
   -webkit-transition: 0.5s;
   font-family: Raleway, sans-serif;
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 2px;
   color: ${bgGreen};
   background-color: ${bgBlack};
   outline: none;
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
 
   &:focus {
     border: 1px solid ${bgGreen};
