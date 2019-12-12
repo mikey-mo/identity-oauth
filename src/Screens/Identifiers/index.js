@@ -94,7 +94,7 @@ const EnrollText = styled.div`
   }
 `
 
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -235,11 +235,11 @@ class Identifiers extends Component {
   };
 
   onEmailChange = (event) => {
-    this.setState({ emailRawValue: event.target.value })
+    this.setState({ emailRawValue: event.target.value, isNotValid: false });
   }
 
   onPhoneChange = (event) => {
-    this.setState({ phoneRawValue: event.value })
+    this.setState({ phoneRawValue: event.value, isNotValid: false });
   }
   
   onCountryChange = (event) => {
@@ -272,7 +272,8 @@ class Identifiers extends Component {
     } else this.sendNotification(type, identifier);
   }
 
-  onSubmit = () => {
+  onSubmit = (event) => {
+    event.preventDefault();
     const { type, emailRawValue, phoneRawValue } = this.state;
     const { toggleLoader } = this.props;
     const identifier = type === 'email' ? emailRawValue : phoneRawValue;
@@ -325,20 +326,22 @@ class Identifiers extends Component {
           <EnrollText>
             {`PLEASE ENTER YOUR ${typeText} BELOW`}
           </EnrollText>
-
-          <FormWrapper>
+          
+          <FormWrapper onSubmit={this.onSubmit}>
             { type === 'phone' ?
               <PhoneWrapper>
                 {this.renderOptions()}
                 <NumberFormatWrapper
+                  value={phoneRawValue}
+                  type="tel"
                   format={format}
                   placeholder={placeholder}
                   onValueChange={this.onPhoneChange}
                 />
               </PhoneWrapper> :
               <Input
-                value={type === 'email' ? emailRawValue : phoneRawValue}
-                type="text"
+                value={emailRawValue}
+                type="email"
                 onChange={this.onEmailChange}
                 placeholder="jimmysupreme@gmail.com"
               />
@@ -350,7 +353,7 @@ class Identifiers extends Component {
               }
             </ButtonWrapper>
           </FormWrapper>
-  
+
         </Container>
       </Body>
     )

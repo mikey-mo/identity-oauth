@@ -111,6 +111,16 @@ const Input = styled.input`
   outline: none;
   color: ${bgGreen};
 
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none; 
+    margin: 0;
+  }
+
+  &[type=number] {
+    -moz-appearance: textfield;
+  }
+
   @media ${MOBILE} {
     font-size: 24px;
     width: 40px;
@@ -178,16 +188,18 @@ class Verify extends Component {
   }
 
   handleChange = e => {
-    const value = e.target.value;
+    const inputValue = e.target.value;
 
     this.setState(state => {
       if (state.value.length >= CODE_LENGTH.length) return null;
       return {
-        value: (state.value + value).slice(0, CODE_LENGTH.length),
+        value: (state.value + inputValue).slice(0, CODE_LENGTH.length),
+        isNotValid: false,
       };
     }, () => {
-      if (this.state.value.length === 6){
-        this.verifyCode();
+      const { value } = this.state;
+      if (value.length === 6){
+        this.verifyCode(value);
       }
     });
   }
@@ -197,6 +209,7 @@ class Verify extends Component {
       this.setState(state => {
         return {
           value: state.value.slice(0, state.value.length - 1),
+          isNotValid: false,
         };
       });
     }
@@ -216,8 +229,8 @@ class Verify extends Component {
     })
   }
 
-  verifyCode = async () => {
-    const { value } = this.state;
+  verifyCode = async (value) => {
+    // const { value } = this.state;
     const { history: { location: { state: { type, identifier } } } } = this.props;
 
     try {
@@ -254,6 +267,7 @@ class Verify extends Component {
             <Wrapper onClick={this.handleClick}>
               <Input
                 value=""
+                type="tel"
                 ref={this.input}
                 onChange={this.handleChange}
                 onKeyUp={this.handleKeyUp}
