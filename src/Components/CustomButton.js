@@ -35,7 +35,7 @@ const Button = styled.button`
 
 const Div = styled.div`
   color: ${props => props.primary ? bgGreen : white};
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 10px;
   font-weight: ${props => props.primary ? '700' : '400'};
   text-align: center;
