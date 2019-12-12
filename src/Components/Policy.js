@@ -12,7 +12,7 @@ const ContainerDiv = styled.div`
 `
 
 const TermsText = styled.div`
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 9px;
   letter-spacing: 1px;
   color: ${Colors.gray2};

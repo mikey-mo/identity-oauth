@@ -69,7 +69,7 @@ const EnrollWrapper = styled.div`
 `
 
 const EnrollText = styled.div`
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 18px;
   color: ${white};
   letter-spacing: 1px;
@@ -80,7 +80,7 @@ const EnrollText = styled.div`
 `
 
 const MerchantText = styled.div`
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 2px;

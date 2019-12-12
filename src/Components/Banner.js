@@ -13,7 +13,7 @@ const Div = styled.div`
 `
 
 const Text = styled.div`
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.5px;

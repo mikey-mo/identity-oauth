@@ -32,7 +32,7 @@ const WrapperDiv = styled.div`
 
 const ReqText = styled.div`
   color: ${Colors.white};
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 12px;
   margin-bottom: 5px;
   letter-spacing: 1.5px;
@@ -44,7 +44,7 @@ const ReqText = styled.div`
 `
 
 const ResText = styled.div`
-  font-family: Noto Sans TC;
+  font-family: Raleway, sans-serif;
   font-size: 12px;
   letter-spacing: 1.5px;
   color: #545454;
