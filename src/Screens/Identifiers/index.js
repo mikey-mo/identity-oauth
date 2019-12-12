@@ -204,6 +204,8 @@ const NumberFormatWrapper = styled(NumberFormat)`
   }
 `
 
+let initInterval;
+
 class Identifiers extends Component {
   constructor(props) {
     super();
@@ -219,22 +221,31 @@ class Identifiers extends Component {
   }
 
   componentDidMount() {
-    const { toggleLoader } = this.props;
+    const { toggleLoader, match } = this.props;
+    toggleLoader(true);
 
-    toggleLoader(false);
+    if (match.params) {
+      if (match.params.type) {
+        this.establishIdentifierType(match.params.type);
+      }
+    }
 
-    const init = setInterval(() => {
+    initInterval = setInterval(() => {
       const type = this.inputIdentifierType.value;
+      this.establishIdentifierType(type);
+    }, 100);
+  }
 
-      const typeText = type === 'phone' ?
-      'PHONE NUMBER':
-      'EMAIL';
-  
-      this.setState({ type, typeText }, () => {
-        clearInterval(init);
-        toggleLoader(false);
-      });
-    }, 2000);
+  establishIdentifierType = type => {
+    const { toggleLoader } = this.props;
+    const typeText = type === 'phone' ?
+    'PHONE NUMBER':
+    'EMAIL';
+
+    this.setState({ type, typeText }, () => {
+      clearInterval(initInterval);
+      toggleLoader(false);
+    });
   }
 
   renderOptions = () => {

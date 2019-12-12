@@ -28,6 +28,13 @@ class Navigation extends Component {
             }
           />
           <Route
+            exact path="/:type"
+            render={() => <Identifiers
+                toggleLoader={this.toggleLoader}
+              />
+            }
+          />
+          <Route
             path="/auth/verify"
             render={() => <VerifyCode
                 toggleLoader={this.toggleLoader}
