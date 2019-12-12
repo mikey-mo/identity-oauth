@@ -267,10 +267,12 @@ class Identifiers extends Component {
   }
 
   checkIdentifier = async (type, identifier) => {
+    const { toggleLoader } = this.props;
     const response = await authIdentifier(type, identifier);
 
     if (response.status === 200 && !response.data.needsAuth) {
-      this.nextPath('/auth/verified', {})
+      this.nextPath('/auth/verified', {});
+      toggleLoader(false);
       // this will be a callback to the main app calling this
     } else this.sendNotification(type, identifier);
   }
