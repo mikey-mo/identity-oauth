@@ -14,6 +14,7 @@ const { requestCode } = notificationService;
 const { auth: { authIdentifier } } = identityService;
 const { DESKTOP, MOBILE } = Sizes;
 const { gray1, gray3, white, bgGreen, bgBlack, bodyBlack, errorRed } = Colors;
+const REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const Body = styled.div`
   background-color: ${bodyBlack};
@@ -93,7 +94,7 @@ const EnrollText = styled.div`
   }
 `
 
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -234,11 +235,11 @@ class Identifiers extends Component {
   };
 
   onEmailChange = (event) => {
-    this.setState({ emailRawValue: event.target.value })
+    this.setState({ emailRawValue: event.target.value, isNotValid: false });
   }
 
   onPhoneChange = (event) => {
-    this.setState({ phoneRawValue: event.value })
+    this.setState({ phoneRawValue: event.value, isNotValid: false });
   }
   
   onCountryChange = (event) => {
@@ -262,18 +263,18 @@ class Identifiers extends Component {
     }
   }
 
-  onSubmit = async () => {
+  onSubmit = async (event) => {
+    event.preventDefault();
     const { type, emailRawValue, phoneRawValue } = this.state;
     const { toggleLoader } = this.props;
     // const identifier = type === 'email' ? emailRawValue : phoneRawValue;
     let identifier;
 
     if (type === 'email') {
-      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
       identifier = emailRawValue;
 
-      if (re.test(String(emailRawValue).toLowerCase())) {
+      if (REGEX.test(String(emailRawValue).toLowerCase())) {
         toggleLoader(true);
         const response = await authIdentifier(type, identifier);
 
@@ -330,15 +331,15 @@ class Identifiers extends Component {
           <EnrollText>
             {`PLEASE ENTER YOUR ${typeText} BELOW`}
           </EnrollText>
-
-          <FormWrapper>
+          
+          <FormWrapper onSubmit={this.onSubmit}>
             { type === 'phone' ?
               <PhoneWrapper>
                 {this.renderOptions()}
                 <NumberFormatWrapper format={format} placeholder={placeholder} onValueChange={this.onPhoneChange} />
               </PhoneWrapper> :
               <Input
-                value={type === 'email' ? emailRawValue : phoneRawValue}
+                value={emailRawValue}
                 type="text"
                 onChange={this.onEmailChange}
                 placeholder="jimmysupreme@gmail.com"
@@ -351,7 +352,7 @@ class Identifiers extends Component {
               }
             </ButtonWrapper>
           </FormWrapper>
-  
+
         </Container>
       </Body>
     )
