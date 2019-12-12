@@ -193,12 +193,32 @@ class Identifiers extends Component {
     super();
 
     this.state = {
-      type: props.match.params.type,
+      type: '',
+      typeText: '',
       country: 'us',
       isNotValid: false,
       phoneRawValue: '',
       emailRawValue: '',
     };
+  }
+
+  componentDidMount() {
+    const { toggleLoader } = this.props;
+
+    toggleLoader(false);
+
+    const init = setInterval(() => {
+      const type = this.inputIdentifierType.value;
+
+      const typeText = type === 'phone' ?
+      'PHONE NUMBER':
+      'EMAIL';
+  
+      this.setState({ type, typeText }, () => {
+        clearInterval(init);
+        toggleLoader(false);
+      });
+    }, 2000);
   }
 
   renderOptions = () => {
@@ -292,11 +312,7 @@ class Identifiers extends Component {
   }
 
   render() {
-    const { type, country, isNotValid } = this.state;
-
-    const typeText = type === 'email' ?
-    'EMAIL' :
-    'PHONE NUMBER';
+    const { country, isNotValid, type, typeText } = this.state;
 
     let placeholder = '(555) 555-5555';
     let format = '(###) ###-####';
@@ -336,7 +352,11 @@ class Identifiers extends Component {
               }
             </ButtonWrapper>
           </FormWrapper>
-  
+          <input
+            type="hidden"
+            id="input-identifier-type"
+            ref={(el) => { this.inputIdentifierType = el; }}
+          />
         </Container>
       </Body>
     )
