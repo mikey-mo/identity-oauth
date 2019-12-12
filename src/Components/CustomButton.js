@@ -47,7 +47,7 @@ const Div = styled.div`
 `
 
 const CustomButton = ({ text, primary, width, onClick }) => (
-  <Button primary={primary} width={width} onClick={onClick}>
+  <Button type="submit" primary={primary} width={width} onClick={onClick}>
     <Div primary={primary}>{text.toUpperCase()}</Div>
   </Button>
 )
