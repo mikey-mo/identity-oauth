@@ -14,7 +14,7 @@ const authIdentifier = async (type, identifier) => {
          .catch(error => error.response);
     }
     catch (e) {
-        console.warn(e);
+        console.warn('error authing identififer', e);
         return e;
     }
 };
@@ -30,7 +30,7 @@ const addIdentifier = async (type, identifier) => {
         .catch(error => error.response);
     }
     catch (e) {
-        console.warn(e);
+        console.warn('error adding identifier', e);
         return e;
     }
 };
@@ -44,7 +44,7 @@ const getPermissions = async () => {
         .catch(error => error.response);
     }
     catch (e) {
-        console.warn(e);
+        console.warn('error getting permissions', e);
         return e;
     }
 };
@@ -63,7 +63,7 @@ const grantAuths = async (identity, grants) => {
         .catch(error => error.response);
     }
     catch (e) {
-        console.warn(e);
+        console.warn('erroring granting auths', e);
         return e;
     }
 };

@@ -225,13 +225,11 @@ class Identifiers extends Component {
     toggleLoader(true);
 
     if (match.params) {
-      if (match.params.type) {
-        this.establishIdentifierType(match.params.type);
-      }
+      if (match.params.type) this.establishIdentifierType(match.params.type);
     }
 
     initInterval = setInterval(() => {
-      const type = this.inputIdentifierType.value;
+      const type = this.inputIdentifierType.value || 'email';
       this.establishIdentifierType(type);
     }, 100);
   }
