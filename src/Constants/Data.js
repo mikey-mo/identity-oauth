@@ -1,3 +1,6 @@
+let consumerToken;
+let userId = "1";
+
 export default {
   data: [
     {
@@ -13,7 +16,12 @@ export default {
       response: '(917) 123-1234',
     },
   ],
-  code: {
-    userId: "1",
-  }
+  getConsumerToken: () => consumerToken,
+  setConsumerToken: token => {
+    consumerToken = token;
+  },
+  getUserId: () => userId,
+  setUserId: id => {
+    userId = id;
+  },
 }

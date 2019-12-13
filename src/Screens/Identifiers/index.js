@@ -7,9 +7,9 @@ import { CustomButton } from '../../Components';
 import logo from '../../assets/images/old-rocket.png';
 import identityService from '../../Services/identity';
 import notificationService from '../../Services/notification';
-import mockData from '../../Constants/MockData';
+import Data from '../../Constants/Data';
 
-const { code: { userId } } = mockData;
+const { getUserId, setConsumerToken } = Data;
 const { requestCode } = notificationService;
 const { auth: { authIdentifier } } = identityService;
 const { DESKTOP, MOBILE } = Sizes;
@@ -222,16 +222,28 @@ class Identifiers extends Component {
 
   componentDidMount() {
     const { toggleLoader, match } = this.props;
+
     toggleLoader(true);
 
-    if (match.params) {
+    if (Object.keys(match.params).length) {
       if (match.params.type) this.establishIdentifierType(match.params.type);
+    } else {
+      initInterval = setInterval(() => {
+        try {
+          const type = this.inputIdentifierType.value || 'email';
+          const value = this.inputIdentifierValue.value;
+          if (type && value) {
+            this.setConsumerToken();
+            this.checkIdentifier(type, value);
+            clearInterval(initInterval);
+          }
+          else this.establishIdentifierType(type);
+        } catch (e) {
+          console.warn(e);
+          clearInterval(initInterval);
+        }
+      }, 100);
     }
-
-    initInterval = setInterval(() => {
-      const type = this.inputIdentifierType.value || 'email';
-      this.establishIdentifierType(type);
-    }, 100);
   }
 
   establishIdentifierType = type => {
@@ -242,8 +254,14 @@ class Identifiers extends Component {
 
     this.setState({ type, typeText }, () => {
       clearInterval(initInterval);
+      this.setConsumerToken();
       toggleLoader(false);
     });
+  }
+
+  setConsumerToken = () => {
+    const token = this.inputConsumerToken.value;
+    setConsumerToken(token);
   }
 
   renderOptions = () => {
@@ -264,7 +282,7 @@ class Identifiers extends Component {
   nextPath = (url, params) => {
     const { history } = this.props;
     history.push(url, params);
-  };
+  }
 
   onEmailChange = (event) => {
     this.setState({ emailRawValue: event.target.value, isNotValid: false });
@@ -280,14 +298,12 @@ class Identifiers extends Component {
 
   sendNotification = async (type, identifier) => {
     const { toggleLoader } = this.props;
+    const userId = getUserId();
 
     try {
       const response = await requestCode({ type, identifier, userId });
       if (response.status === 200) this.nextPath("/auth/verify", { type, identifier });
-      else {
-        console.warn('there was a problem');
-        console.log(response);
-      }
+      else console.warn('there was a problem');
       toggleLoader(false);
     } catch (e) {
       toggleLoader(false);
@@ -299,11 +315,15 @@ class Identifiers extends Component {
     const { toggleLoader } = this.props;
     const response = await authIdentifier(type, identifier);
 
-    if (response.status === 200 && !response.data.needsAuth) {
-      this.nextPath('/auth/verified', {});
+    if (response.status === 200) {
+      if (!response.data.needsAuth) {
+        this.nextPath('/auth/complete', response.data);
+        toggleLoader(false);
+      } else this.sendNotification(type, identifier);
+    } else {
+      console.warn('Couldnt auth identifier');  
       toggleLoader(false);
-      // this will be a callback to the main app calling this
-    } else this.sendNotification(type, identifier);
+    }
   }
 
   onSubmit = (event) => {
@@ -335,7 +355,6 @@ class Identifiers extends Component {
 
   render() {
     const { type, country, isNotValid, emailRawValue, phoneRawValue } = this.state;
-
     const typeText = type === 'email' ?
     'EMAIL' :
     'PHONE NUMBER';
@@ -391,6 +410,16 @@ class Identifiers extends Component {
             type="hidden"
             id="input-identifier-type"
             ref={(el) => { this.inputIdentifierType = el; }}
+          />
+          <input
+            type="hidden"
+            id="input-identifier-value"
+            ref={(el) => { this.inputIdentifierValue = el; }}
+          />
+          <input
+            type="hidden"
+            id="input-consumer-token"
+            ref={(el) => { this.inputConsumerToken = el; }}
           />
         </Container>
       </Body>

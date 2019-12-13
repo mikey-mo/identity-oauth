@@ -1,11 +1,11 @@
 import Sizes from './Sizes';
 import Colors from './Colors';
-import MockData from './MockData';
+import Data from './Data';
 import CountryCode from './CountryCode';
 
 export {
   Sizes,
   Colors,
-  MockData,
+  Data,
   CountryCode,
 }

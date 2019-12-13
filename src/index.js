@@ -5,6 +5,7 @@ import './index.css';
 import Identifiers from './Screens/Identifiers';
 import Permissions from './Screens/Permissions';
 import VerifyCode from './Screens/VerifyCode';
+import Complete from './Screens/Complete';
 import * as serviceWorker from './serviceWorker';
 import { WhisperSpinner } from "react-spinners-kit";
 import 'typeface-noto-sans-tc';
@@ -48,8 +49,10 @@ class Navigation extends Component {
               />
             }
           />
-          <Route path="/auth/verified"><div><p>Verified</p></div></Route>
-          <Route path="/auth/cancelled"><div><p>Cancelled</p></div></Route>
+          <Route
+            path="/auth/complete"
+            component={Complete}
+          />
         </Router>
       { visible &&
         <div
