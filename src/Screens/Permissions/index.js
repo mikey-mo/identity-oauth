@@ -9,7 +9,7 @@ import {
   LineItem,
   Policy,
 } from '../../Components';
-import { Sizes, Colors, MockData } from '../../Constants';
+import { Sizes, Colors, Data } from '../../Constants';
 import identityService from '../../Services/identity';
 
 const { auth: { getPermissions, grantAuths } } = identityService;
@@ -75,16 +75,16 @@ class Permissions extends Component {
         const { data: { permissions } } = response;
         this.setState({ permissions });
       }
-      else console.warn('something went wrong', response);
+      else console.warn('something went wrong');
     }
     catch (e) {
       console.warn(e);
     }
   }
 
-  nextPath = (url) => {
+  nextPath = (url, params) => {
     const { history } = this.props;
-    history.push(url);
+    history.push(url, params);
   }
 
   list = () => this.state.permissions.map(
@@ -131,8 +131,8 @@ class Permissions extends Component {
         })
       );
   
-      if (response.status === 201) this.nextPath("/auth/verified");
-      else console.warn('something went wrong', response);
+      if (response.status === 201) this.nextPath("/auth/complete", response.data);
+      else console.warn('something went wrong');
       toggleLoader(false);
     }
     catch (e) {
@@ -156,7 +156,7 @@ class Permissions extends Component {
         <Policy />
 
         <FooterDiv>
-          <CustomButton text="CANCEL" onClick={() => this.nextPath('/auth/cancelled')} />
+          <CustomButton text="CANCEL" onClick={() => this.nextPath('/auth/complete', {})} />
           <CustomButton primary text="AUTHORIZE" onClick={this.submit} />
         </FooterDiv>
 
@@ -167,7 +167,7 @@ class Permissions extends Component {
 };
 
 Permissions.defaultProps = {
-  permissions: MockData.data,
+  permissions: Data.data,
 }
 
 Permissions.propTypes = {

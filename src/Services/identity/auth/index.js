@@ -1,6 +1,7 @@
 import axios from 'axios';
+import Data from '../../../Constants/Data';
 
-const consumer = '1ae452fc-28f0-497e-accc-5517c2d7bc61';
+const { getConsumerToken } = Data;
 const authUrl = "http://52.23.163.152/";
 const version = "v1/";
 
@@ -9,7 +10,7 @@ const authIdentifier = async (type, identifier) => {
         return await axios({
             method: 'get',
             url: `${authUrl}${version}auth/identifiers/${type}/${identifier}`,
-            headers: { consumer },
+            headers: { 'content-type': 'application/json', consumer: getConsumerToken() },
          })
          .catch(error => error.response);
     }
@@ -39,7 +40,7 @@ const getPermissions = async () => {
     try {
         return await axios({
             method: 'get',
-            url: `${authUrl}${version}auth/permissions/${consumer}`,
+            url: `${authUrl}${version}auth/permissions/${getConsumerToken()}`,
         })
         .catch(error => error.response);
     }
@@ -56,7 +57,7 @@ const grantAuths = async (identity, grants) => {
             url: `${authUrl}${version}auth/grants`,
             data: {
                 identity,
-                consumer,
+                consumer: getConsumerToken(),
                 grants,
             },
         })

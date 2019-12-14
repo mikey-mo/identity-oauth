@@ -7,9 +7,9 @@ import { CustomButton } from '../../Components';
 import logo from '../../assets/images/old-rocket.png';
 import identityService from '../../Services/identity';
 import notificationService from '../../Services/notification';
-import mockData from '../../Constants/MockData';
+import Data from '../../Constants/Data';
 
-const { code: { userId } } = mockData;
+const { getUserId, setConsumerToken } = Data;
 const { requestCode } = notificationService;
 const { auth: { authIdentifier } } = identityService;
 const { DESKTOP, MOBILE } = Sizes;
@@ -204,46 +204,43 @@ const NumberFormatWrapper = styled(NumberFormat)`
   }
 `
 
-let initInterval;
-
 class Identifiers extends Component {
-  constructor(props) {
-    super();
+  state = {
+    type: '',
+    typeText: '',
+    country: 'us',
+    isNotValid: false,
+    phoneRawValue: '',
+    emailRawValue: '',
+  };
 
-    this.state = {
-      type: '',
-      typeText: '',
-      country: 'us',
-      isNotValid: false,
-      phoneRawValue: '',
-      emailRawValue: '',
-    };
+  componentWillMount() {
+    const { toggleLoader } = this.props;
+    toggleLoader(true);
   }
 
   componentDidMount() {
-    const { toggleLoader, match } = this.props;
-    toggleLoader(true);
+    setTimeout(() => {
+      const { toggleLoader } = this.props;
+      const type = this.inputIdentifierType.value;
+      const value = this.inputIdentifierValue.value;
 
-    if (match.params) {
-      if (match.params.type) this.establishIdentifierType(match.params.type);
-    }
+      this.setConsumerToken();
 
-    initInterval = setInterval(() => {
-      const type = this.inputIdentifierType.value || 'email';
-      this.establishIdentifierType(type);
-    }, 100);
+      const typeText = type === 'phone' ?
+      'PHONE NUMBER':
+      'EMAIL';
+
+      this.setState({ type, typeText });
+
+      if (type && value) this.checkIdentifier(type, value);
+      else toggleLoader(false);
+    }, 1000);
   }
 
-  establishIdentifierType = type => {
-    const { toggleLoader } = this.props;
-    const typeText = type === 'phone' ?
-    'PHONE NUMBER':
-    'EMAIL';
-
-    this.setState({ type, typeText }, () => {
-      clearInterval(initInterval);
-      toggleLoader(false);
-    });
+  setConsumerToken = () => {
+    const token = this.inputConsumerToken.value;
+    setConsumerToken(token);
   }
 
   renderOptions = () => {
@@ -264,7 +261,7 @@ class Identifiers extends Component {
   nextPath = (url, params) => {
     const { history } = this.props;
     history.push(url, params);
-  };
+  }
 
   onEmailChange = (event) => {
     this.setState({ emailRawValue: event.target.value, isNotValid: false });
@@ -278,16 +275,30 @@ class Identifiers extends Component {
     this.setState({ country: event.target.value })
   }
 
+  checkIdentifier = async (type, identifier) => {
+    const { toggleLoader } = this.props;
+
+    const response = await authIdentifier(type, identifier);
+
+    if (response.status === 200) {
+      if (!response.data.needsAuth) {
+        this.nextPath('/auth/complete', response.data);
+        toggleLoader(false);
+      } else this.sendNotification(type, identifier);
+    } else {
+      console.warn('Couldnt auth identifier');  
+      toggleLoader(false);
+    }
+  }
+
   sendNotification = async (type, identifier) => {
     const { toggleLoader } = this.props;
+    const userId = getUserId();
 
     try {
       const response = await requestCode({ type, identifier, userId });
       if (response.status === 200) this.nextPath("/auth/verify", { type, identifier });
-      else {
-        console.warn('there was a problem');
-        console.log(response);
-      }
+      else console.warn('there was a problem');
       toggleLoader(false);
     } catch (e) {
       toggleLoader(false);
@@ -295,22 +306,11 @@ class Identifiers extends Component {
     }
   }
 
-  checkIdentifier = async (type, identifier) => {
-    const { toggleLoader } = this.props;
-    const response = await authIdentifier(type, identifier);
-
-    if (response.status === 200 && !response.data.needsAuth) {
-      this.nextPath('/auth/verified', {});
-      toggleLoader(false);
-      // this will be a callback to the main app calling this
-    } else this.sendNotification(type, identifier);
-  }
-
   onSubmit = (event) => {
     event.preventDefault();
     const { type, emailRawValue, phoneRawValue } = this.state;
     const { toggleLoader } = this.props;
-    const identifier = type === 'email' ? emailRawValue : phoneRawValue;
+    const identifier = type === 'phone' ?  phoneRawValue : emailRawValue;
 
     if (type === 'email') {
       if (REGEX.test(String(emailRawValue).toLowerCase())) {
@@ -319,7 +319,6 @@ class Identifiers extends Component {
       } else {
         this.setState({ isNotValid: true });
       }
-
     }
 
     if (type === 'phone') {
@@ -330,15 +329,10 @@ class Identifiers extends Component {
         this.setState({ isNotValid: true });
       }
     }
-
   }
 
   render() {
-    const { type, country, isNotValid, emailRawValue, phoneRawValue } = this.state;
-
-    const typeText = type === 'email' ?
-    'EMAIL' :
-    'PHONE NUMBER';
+    const { type, typeText, country, isNotValid, emailRawValue, phoneRawValue } = this.state;
 
     let placeholder = '(555) 555-5555';
     let format = '(###) ###-####';
@@ -391,6 +385,16 @@ class Identifiers extends Component {
             type="hidden"
             id="input-identifier-type"
             ref={(el) => { this.inputIdentifierType = el; }}
+          />
+          <input
+            type="hidden"
+            id="input-identifier-value"
+            ref={(el) => { this.inputIdentifierValue = el; }}
+          />
+          <input
+            type="hidden"
+            id="input-consumer-token"
+            ref={(el) => { this.inputConsumerToken = el; }}
           />
         </Container>
       </Body>
