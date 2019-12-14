@@ -19,9 +19,11 @@ export default {
   getConsumerToken: () => consumerToken,
   setConsumerToken: token => {
     consumerToken = token;
+    return true;
   },
   getUserId: () => userId,
   setUserId: id => {
     userId = id;
+    return true;
   },
 }

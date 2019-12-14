@@ -22,14 +22,7 @@ class Navigation extends Component {
       <div>
         <Router>
           <Route
-            exact path="/"
-            render={() => <Identifiers
-                toggleLoader={this.toggleLoader}
-              />
-            }
-          />
-          <Route
-            exact path="/:type"
+            exact path="/auth"
             render={() => <Identifiers
                 toggleLoader={this.toggleLoader}
               />

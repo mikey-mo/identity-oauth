@@ -161,7 +161,6 @@ const AnotherCode = styled.button`
   margin-bottom: 10px;
 `
 
-
 class Verify extends Component {
   input = React.createRef();
   state = {

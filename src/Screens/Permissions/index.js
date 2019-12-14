@@ -131,7 +131,7 @@ class Permissions extends Component {
         })
       );
   
-      if (response.status === 201) this.nextPath("/auth/verified", response.data);
+      if (response.status === 201) this.nextPath("/auth/complete", response.data);
       else console.warn('something went wrong');
       toggleLoader(false);
     }
@@ -156,7 +156,7 @@ class Permissions extends Component {
         <Policy />
 
         <FooterDiv>
-          <CustomButton text="CANCEL" onClick={() => this.nextPath('/auth/cancelled', {})} />
+          <CustomButton text="CANCEL" onClick={() => this.nextPath('/auth/complete', {})} />
           <CustomButton primary text="AUTHORIZE" onClick={this.submit} />
         </FooterDiv>
 

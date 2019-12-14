@@ -204,59 +204,38 @@ const NumberFormatWrapper = styled(NumberFormat)`
   }
 `
 
-let initInterval;
-
 class Identifiers extends Component {
-  constructor(props) {
-    super();
+  state = {
+    type: '',
+    typeText: '',
+    country: 'us',
+    isNotValid: false,
+    phoneRawValue: '',
+    emailRawValue: '',
+  };
 
-    this.state = {
-      type: '',
-      typeText: '',
-      country: 'us',
-      isNotValid: false,
-      phoneRawValue: '',
-      emailRawValue: '',
-    };
+  componentWillMount() {
+    const { toggleLoader } = this.props;
+    toggleLoader(true);
   }
 
   componentDidMount() {
-    const { toggleLoader, match } = this.props;
+    setTimeout(() => {
+      const { toggleLoader } = this.props;
+      const type = this.inputIdentifierType.value;
+      const value = this.inputIdentifierValue.value;
 
-    toggleLoader(true);
-
-    if (Object.keys(match.params).length) {
-      if (match.params.type) this.establishIdentifierType(match.params.type);
-    } else {
-      initInterval = setInterval(() => {
-        try {
-          const type = this.inputIdentifierType.value || 'email';
-          const value = this.inputIdentifierValue.value;
-          if (type && value) {
-            this.setConsumerToken();
-            this.checkIdentifier(type, value);
-            clearInterval(initInterval);
-          }
-          else this.establishIdentifierType(type);
-        } catch (e) {
-          console.warn(e);
-          clearInterval(initInterval);
-        }
-      }, 100);
-    }
-  }
-
-  establishIdentifierType = type => {
-    const { toggleLoader } = this.props;
-    const typeText = type === 'phone' ?
-    'PHONE NUMBER':
-    'EMAIL';
-
-    this.setState({ type, typeText }, () => {
-      clearInterval(initInterval);
       this.setConsumerToken();
-      toggleLoader(false);
-    });
+
+      const typeText = type === 'phone' ?
+      'PHONE NUMBER':
+      'EMAIL';
+
+      this.setState({ type, typeText });
+
+      if (type && value) this.checkIdentifier(type, value);
+      else toggleLoader(false);
+    }, 1000);
   }
 
   setConsumerToken = () => {
@@ -296,6 +275,22 @@ class Identifiers extends Component {
     this.setState({ country: event.target.value })
   }
 
+  checkIdentifier = async (type, identifier) => {
+    const { toggleLoader } = this.props;
+
+    const response = await authIdentifier(type, identifier);
+
+    if (response.status === 200) {
+      if (!response.data.needsAuth) {
+        this.nextPath('/auth/complete', response.data);
+        toggleLoader(false);
+      } else this.sendNotification(type, identifier);
+    } else {
+      console.warn('Couldnt auth identifier');  
+      toggleLoader(false);
+    }
+  }
+
   sendNotification = async (type, identifier) => {
     const { toggleLoader } = this.props;
     const userId = getUserId();
@@ -311,26 +306,11 @@ class Identifiers extends Component {
     }
   }
 
-  checkIdentifier = async (type, identifier) => {
-    const { toggleLoader } = this.props;
-    const response = await authIdentifier(type, identifier);
-
-    if (response.status === 200) {
-      if (!response.data.needsAuth) {
-        this.nextPath('/auth/complete', response.data);
-        toggleLoader(false);
-      } else this.sendNotification(type, identifier);
-    } else {
-      console.warn('Couldnt auth identifier');  
-      toggleLoader(false);
-    }
-  }
-
   onSubmit = (event) => {
     event.preventDefault();
     const { type, emailRawValue, phoneRawValue } = this.state;
     const { toggleLoader } = this.props;
-    const identifier = type === 'email' ? emailRawValue : phoneRawValue;
+    const identifier = type === 'phone' ?  phoneRawValue : emailRawValue;
 
     if (type === 'email') {
       if (REGEX.test(String(emailRawValue).toLowerCase())) {
@@ -339,7 +319,6 @@ class Identifiers extends Component {
       } else {
         this.setState({ isNotValid: true });
       }
-
     }
 
     if (type === 'phone') {
@@ -350,14 +329,10 @@ class Identifiers extends Component {
         this.setState({ isNotValid: true });
       }
     }
-
   }
 
   render() {
-    const { type, country, isNotValid, emailRawValue, phoneRawValue } = this.state;
-    const typeText = type === 'email' ?
-    'EMAIL' :
-    'PHONE NUMBER';
+    const { type, typeText, country, isNotValid, emailRawValue, phoneRawValue } = this.state;
 
     let placeholder = '(555) 555-5555';
     let format = '(###) ###-####';
