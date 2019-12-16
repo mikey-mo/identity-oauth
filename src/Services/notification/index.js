@@ -3,7 +3,7 @@ import axios from 'axios';
 const notificationUrl = "https://identity-notif.ddns.net/";
 const requestCodePath = "code";
 
-const requestCode = async ({ type, identifier, userId }) => {
+const requestCode = async ({ type, identifier }) => {
     try {
         return await axios({
             method: 'post',
@@ -11,7 +11,6 @@ const requestCode = async ({ type, identifier, userId }) => {
             data: {
               type,
               identifier,
-              userId,
             },
           })
           .catch(error => error.response);
@@ -22,14 +21,14 @@ const requestCode = async ({ type, identifier, userId }) => {
     }
 }
 
-const verifyCode = async ({ code, userId }) => {
+const verifyCode = async ({ code, identifier }) => {
     try {
         return await axios({
             method: 'patch',
             url: `${notificationUrl}${requestCodePath}`,
             data: {
                 code,
-                userId,
+                identifier,
             },
         })
         .catch(error => error.response);

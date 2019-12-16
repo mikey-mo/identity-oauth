@@ -1,5 +1,4 @@
 let consumerToken;
-let userId = "1";
 
 export default {
   data: [
@@ -19,11 +18,6 @@ export default {
   getConsumerToken: () => consumerToken,
   setConsumerToken: token => {
     consumerToken = token;
-    return true;
-  },
-  getUserId: () => userId,
-  setUserId: id => {
-    userId = id;
     return true;
   },
 }

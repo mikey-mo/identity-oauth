@@ -9,7 +9,7 @@ import identityService from '../../Services/identity';
 import notificationService from '../../Services/notification';
 import Data from '../../Constants/Data';
 
-const { getUserId, setConsumerToken } = Data;
+const { setConsumerToken } = Data;
 const { requestCode } = notificationService;
 const { auth: { authIdentifier } } = identityService;
 const { DESKTOP, MOBILE } = Sizes;
@@ -293,10 +293,9 @@ class Identifiers extends Component {
 
   sendNotification = async (type, identifier) => {
     const { toggleLoader } = this.props;
-    const userId = getUserId();
 
     try {
-      const response = await requestCode({ type, identifier, userId });
+      const response = await requestCode({ type, identifier });
       if (response.status === 200) this.nextPath("/auth/verify", { type, identifier });
       else console.warn('there was a problem');
       toggleLoader(false);

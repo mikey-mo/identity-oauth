@@ -4,12 +4,10 @@ import styled from 'styled-components';
 import { Sizes, Colors } from '../../Constants';
 import notificationService from '../../Services/notification';
 import identityService from '../../Services/identity';
-import Data from '../../Constants/Data';
 
 const CODE_LENGTH = new Array(6).fill(0);
 const { verifyCode } = notificationService;
 const { auth: { addIdentifier } } = identityService;
-const { getUserId } = Data;
 const { DESKTOP, MOBILE } = Sizes;
 const { gray1, gray2, white, bgGreen, bgBlack, bodyBlack, errorRed } = Colors;
 
@@ -231,10 +229,9 @@ class Verify extends Component {
   verifyCode = async (value) => {
     // const { value } = this.state;
     const { history: { location: { state: { type, identifier } } } } = this.props;
-    const userId = getUserId();
 
     try {
-      const response = await verifyCode({ code: value, userId });
+      const response = await verifyCode({ code: value, identifier });
       if (response.status === 200) {
         const data = await addIdentifier(type, identifier);
         if (data.status === 200) {
