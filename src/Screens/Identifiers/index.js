@@ -257,6 +257,8 @@ class Identifiers extends Component {
       </Select>
     )
   }
+  
+  invalidInput = () => `PLEASE MAKE SURE YOU HAVE ENTERED YOUR ${this.state.typeText} CORRECTLY`;
 
   nextPath = (url, params) => {
     const { history } = this.props;
@@ -286,7 +288,8 @@ class Identifiers extends Component {
         toggleLoader(false);
       } else this.sendNotification(type, identifier);
     } else {
-      console.warn('Couldnt auth identifier');  
+      console.warn('Couldnt auth identifier');
+      this.setState({ isNotValid: 'Coudlnt auth identifier' });
       toggleLoader(false);
     }
   }
@@ -297,10 +300,15 @@ class Identifiers extends Component {
     try {
       const response = await requestCode({ type, identifier });
       if (response.status === 200) this.nextPath("/auth/verify", { type, identifier });
-      else console.warn('there was a problem');
+      else {
+        const { data: { error: { description } } } = response;
+        this.setState({ isNotValid: description });
+        console.warn('there was a problem');
+      }
       toggleLoader(false);
     } catch (e) {
       toggleLoader(false);
+      this.setState({ isNotValid: 'something went wrong' });
       console.log('something went wrong', e);
     }
   }
@@ -316,7 +324,7 @@ class Identifiers extends Component {
         toggleLoader(true);
         this.checkIdentifier(type, identifier);
       } else {
-        this.setState({ isNotValid: true });
+        this.setState({ isNotValid: this.invalidInput() });
       }
     }
 
@@ -325,7 +333,7 @@ class Identifiers extends Component {
         toggleLoader(true);
         this.checkIdentifier(type, identifier);
       } else {
-        this.setState({ isNotValid: true });
+        this.setState({ isNotValid: this.invalidInput() });
       }
     }
   }
@@ -375,9 +383,7 @@ class Identifiers extends Component {
             }
             <ButtonWrapper>
               <CustomButton primary onClick={this.onSubmit} text="SUBMIT"/>
-              {
-                isNotValid && <ValidationText>{`PLEASE MAKE SURE YOU HAVE ENTERED YOUR ${typeText} CORRECTLY`}</ValidationText>
-              }
+              {isNotValid && <ValidationText>{isNotValid}</ValidationText>}
             </ButtonWrapper>
           </FormWrapper>
           <input
