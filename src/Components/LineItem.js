@@ -9,7 +9,7 @@ const { MOBILE } = Sizes;
 const ContainerDiv = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${Colors.bgBlack};
+  background-color: white;
 `
 
 const Image = styled.img`
@@ -25,16 +25,17 @@ const WrapperDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 0px 10px 0px 20px;
-  height: 70px;
+  // height: 70px;
   width: 100%;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid black;
 `
 
 const ReqText = styled.div`
-  color: ${Colors.white};
+  color: black;
   font-family: Raleway, sans-serif;
   font-size: 12px;
   margin-bottom: 5px;
+  padding: 10px 0px;
   letter-spacing: 1.5px;
 
   @media ${MOBILE} {

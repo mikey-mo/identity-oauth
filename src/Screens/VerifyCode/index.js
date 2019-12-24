@@ -31,7 +31,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: ${bgBlack};
+  background-color: white;
   
   @media ${DESKTOP} {
     width: 450px;
@@ -48,7 +48,7 @@ const Container = styled.div`
 const EnrollText = styled.div`
   font-family: Raleway, sans-serif;
   font-size: 16px;
-  color: ${white};
+  color: black;
   text-align: center;
   letter-spacing: 2px;
   width: 95%;
@@ -75,7 +75,7 @@ const Box = styled.div`
   justify-content: center;
   font-size: 40px;
   position: relative;
-  color: ${bgGreen};
+  color: black;
 
   @media ${MOBILE} {
     width: 40px;
@@ -89,7 +89,7 @@ const Box = styled.div`
 `
 
 const Wrapper = styled.div`
-  border: 1px solid ${gray1};
+  border: 1px solid black;
   display: inline-block;
   position: relative;
   display: flex;
@@ -107,7 +107,7 @@ const Input = styled.input`
   text-align: center;
   background-color: transparent;
   outline: none;
-  color: ${bgGreen};
+  color: black;
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -132,7 +132,7 @@ const Outline = styled.div`
   top: 0;
   bottom: 0;
   right: 0;
-  box-shadow: 0 0 0 4px ${bgGreen};
+  box-shadow: 0 0 0 2px black;
 `
 
 const ValidationText = styled.div`

@@ -17,7 +17,7 @@ const { gray1, gray3, white, bgGreen, bgBlack, bodyBlack, errorRed } = Colors;
 const REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const Body = styled.div`
-  background-color: ${bodyBlack};
+  background-color: white;
 
   @media ${DESKTOP} {
     display: flex;
@@ -36,7 +36,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: ${bgBlack};
+  background-color: white;
   
   @media ${DESKTOP} {
     width: 500px;
@@ -54,13 +54,14 @@ const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${gray3};
+  background-color: white;
   border-radius: 8px;
   padding: 10px;
 `
 
 const Image = styled.img`
   height: 110px;
+  width: 380px;
   border-radius: 8px;
 
   @media ${MOBILE} {
@@ -68,8 +69,9 @@ const Image = styled.img`
   }
 `
 const MerchantText = styled.div`
+  margin-top: 30px;
   width: 100%;
-  color: ${bgGreen};
+  color: rgb(85, 185, 73);
   text-align: center;
   font-family: Raleway, sans-serif;
   font-size: 30px;
@@ -84,7 +86,7 @@ const MerchantText = styled.div`
 const EnrollText = styled.div`
   font-family: Raleway, sans-serif;
   font-size: 16px;
-  color: ${white};
+  color: black;
   text-align: center;
   letter-spacing: 2px;
   width: 95%;
@@ -130,22 +132,22 @@ const Input = styled.input`
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid ${gray1};
+  border: 1px solid black;
   border-radius: 0px;
   box-sizing: border-box;
   -webkit-transition: 0.5s;
   font-family: Raleway, sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   letter-spacing: 2px;
-  color: ${bgGreen};
-  background-color: ${bgBlack};
+  color: black;
+  background-color: white;
   outline: none;
   overflow: hidden
   text-overflow: ellipsis
   white-space: nowrap
 
   &:focus {
-    border: 1px solid ${bgGreen};
+    border: 1px solid black;
   }
 
   @media ${MOBILE} {
@@ -166,16 +168,16 @@ const Select = styled.select`
   -webkit-border-radius: 0px;
   box-sizing: border-box;
   -webkit-transition: 0.5s;
-  color: ${bgGreen};
+  color: black;
   font-family: Raleway, sans-serif;
-  font-size: 12px;
+  font-size: 18px;
   letter-spacing: 2px;
-  background-color: ${bgBlack};
+  background-color: white;
   border: 1px solid ${gray1};
   outline: none;
 
   &:focus {
-    border: 1px solid ${bgGreen};
+    border: 1px solid black;
   }
 `
 
@@ -189,10 +191,10 @@ const NumberFormatWrapper = styled(NumberFormat)`
   border-radius: 0px;
   -webkit-transition: 0.5s;
   font-family: Raleway, sans-serif;
-  font-size: 12px;
+  font-size: 18px;
   letter-spacing: 2px;
-  color: ${bgGreen};
-  background-color: ${bgBlack};
+  color: black;
+  background-color: white;
   outline: none;
   
   @media ${MOBILE} {
@@ -200,7 +202,7 @@ const NumberFormatWrapper = styled(NumberFormat)`
   }
 
   &:focus {
-    border: 1px solid ${bgGreen};
+    border: 1px solid black;
   }
 `
 
@@ -321,6 +323,7 @@ class Identifiers extends Component {
     }
 
     if (type === 'phone') {
+      console.warn(type);
       if (phoneRawValue.length === 10) {
         toggleLoader(true);
         this.checkIdentifier(type, identifier);
@@ -344,7 +347,7 @@ class Identifiers extends Component {
     return (
       <Body>
         <Container>
-          <MerchantText>{'OLD ROCKET'}</MerchantText>
+          <MerchantText>{'NCR IDENTITY'}</MerchantText>
       
           <ImageWrapper>
             <Image src={logo} alt="AVATAR" />

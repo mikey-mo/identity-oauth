@@ -11,14 +11,28 @@ import {
 } from '../../Components';
 import { Sizes, Colors, Data } from '../../Constants';
 import identityService from '../../Services/identity';
+import logo from '../../assets/images/old-rocket.png';
 
 const { auth: { getPermissions, grantAuths } } = identityService;
 const { DESKTOP, MOBILE } = Sizes;
 const { bgBlack, bodyBlack } = Colors;
 
+const Image = styled.img`
+  margin: 0 auto;
+  margin-top: 50px;
+  height: 110px;
+  width: 380px;
+  border-radius: 8px;
+
+  @media ${MOBILE} {
+    height: 30vmin;
+  }
+`
+
 const BodyDiv = styled.div`
+  display: inline-block;
   height: 40vh;
-  background-color: ${bgBlack};
+  background-color: white;
   padding: 0px 20px;
   overflow-y: scroll;
 
@@ -29,15 +43,15 @@ const BodyDiv = styled.div`
 
 const FooterDiv = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   height: 100px;
   padding: 0px 20px;
-  background-color: ${bgBlack};
+  background-color: white;
 `
 
 const Body = styled.div`
-  background-color: ${bodyBlack};
+  background-color: white;
 
   @media ${DESKTOP} {
     display: flex;
@@ -53,6 +67,7 @@ const Body = styled.div`
 
 const Container = styled.div`
   @media ${DESKTOP} {
+    text-align: center;
     width: 500px;
     overflow: hidden;
     box-shadow: 2px 2px 6px black;
@@ -146,10 +161,11 @@ class Permissions extends Component {
       <Body>
       <Container>
 
-        <Header merchant="OLD ROCKET" />
+        {/* <Header merchant="NCR IDENTITY" /> */}
+        <Image src={logo} alt="AVATAR" />
 
         <BodyDiv>
-          <Banner merchant="OLD ROCKET" />
+          <Banner merchant="NCR IDENTITY" />
           {this.list()}
         </BodyDiv>
 

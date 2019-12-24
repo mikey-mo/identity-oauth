@@ -8,14 +8,14 @@ const { bgGreen, bgBlack, white } = Colors;
 
 const Button = styled.button`
   height: 44px;
-  width: ${({ width }) => width || '130px'};
+  width: ${({ width }) => width || '200px'};
   cursor: pointer;
   box-sizing: border-box;
   border-width: 1px;
   border-style: solid;
-  border-color: ${({ primary }) => primary ? bgGreen : bgBlack};
+  border-color: ${({ primary }) => primary ? 'white' : 'white'};
   outline: 0;
-  background-color: ${bgBlack};
+  background-color: rgb(85, 185, 73);
 
   @media ${DESKTOP} {
     &:hover {
@@ -34,9 +34,10 @@ const Button = styled.button`
 `
 
 const Div = styled.div`
-  color: ${props => props.primary ? bgGreen : white};
+  // color: ${props => props.primary ? bgGreen : white};
+  color: white
   font-family: Raleway, sans-serif;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: ${props => props.primary ? '700' : '400'};
   text-align: center;
   letter-spacing: 2px;

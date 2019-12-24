@@ -8,11 +8,13 @@ const { MOBILE } = Sizes;
 const Div = styled.div`
   display: flex;
   align-items: flex-end;
-  background-color: ${Colors.bgBlack};
+  background-color: white;
+  text-align: center;
   height: 30px;
 `
 
 const Text = styled.div`
+  text-align: center;
   font-family: Raleway, sans-serif;
   font-size: 10px;
   font-weight: 700;

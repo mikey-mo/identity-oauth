@@ -8,7 +8,7 @@ const ContainerDiv = styled.div`
   justify-content: center;
   align-items: center;
   height: 30px;
-  background-color: ${Colors.gray4};
+  background-color: white;
 `
 
 const TermsText = styled.div`
