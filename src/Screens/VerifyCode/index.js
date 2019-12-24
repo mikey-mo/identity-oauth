@@ -227,7 +227,6 @@ class Verify extends Component {
   }
 
   verifyCode = async (value) => {
-    // const { value } = this.state;
     const { history: { location: { state: { type, identifier } } } } = this.props;
 
     try {
@@ -237,14 +236,16 @@ class Verify extends Component {
         if (data.status === 200) {
           const { data: { identity: { id } } } = data; 
           this.nextPath("/auth/permissions", { identityId: id });          
-        }
+        } else this.setState({ isNotValid: 'couldnt add identifier' });
       } else {
-        console.warn('there was a problem', response);
-        if (response.data.error.description === 'code not valid') this.setState({ isNotValid: true })
+        const { data: { error: { description } } } = response;
+        console.warn('there was a problem verifying code', response);
+        this.setState({ isNotValid: description });
       }
     }
     catch (e) {
       console.warn('something went wrong', e);
+      this.setState({ isNotValid: 'something went wrong' });
     }
   }
 
@@ -276,7 +277,7 @@ class Verify extends Component {
               { this.renderBox(values, focused) }
             </Wrapper>
 
-            { isNotValid && <ValidationText>{`CODE IS INCORRECT`}</ValidationText> }
+            { isNotValid && <ValidationText>{isNotValid}</ValidationText> }
           </InputContainer>
 
           <AnotherCode>SEND NEW CODE</AnotherCode>

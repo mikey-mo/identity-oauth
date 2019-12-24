@@ -13,4 +13,6 @@ export default {
   gray4: '#444444',
 
   errorRed: '#D45757',
+
+  ncrGreen: '#55B949',
 };
