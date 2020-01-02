@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/maiki-mo/identity-oauth/static/css/main.c60ffd32.chunk.css",
+    "main.js": "/maiki-mo/identity-oauth/static/js/main.dbd03e5f.chunk.js",
+    "main.js.map": "/maiki-mo/identity-oauth/static/js/main.dbd03e5f.chunk.js.map",
+    "runtime-main.js": "/maiki-mo/identity-oauth/static/js/runtime-main.f0924e6e.js",
+    "runtime-main.js.map": "/maiki-mo/identity-oauth/static/js/runtime-main.f0924e6e.js.map",
+    "static/css/2.67f94d93.chunk.css": "/maiki-mo/identity-oauth/static/css/2.67f94d93.chunk.css",
+    "static/js/2.8af45c1f.chunk.js": "/maiki-mo/identity-oauth/static/js/2.8af45c1f.chunk.js",
+    "static/js/2.8af45c1f.chunk.js.map": "/maiki-mo/identity-oauth/static/js/2.8af45c1f.chunk.js.map",
+    "index.html": "/maiki-mo/identity-oauth/index.html",
+    "precache-manifest.bdc43248d2e13ae2f7e55622ad0e2751.js": "/maiki-mo/identity-oauth/precache-manifest.bdc43248d2e13ae2f7e55622ad0e2751.js",
+    "service-worker.js": "/maiki-mo/identity-oauth/service-worker.js",
+    "static/css/2.67f94d93.chunk.css.map": "/maiki-mo/identity-oauth/static/css/2.67f94d93.chunk.css.map",
+    "static/css/main.c60ffd32.chunk.css.map": "/maiki-mo/identity-oauth/static/css/main.c60ffd32.chunk.css.map",
+    "static/media/index.css": "/maiki-mo/identity-oauth/static/media/noto-sans-tc-latin-900.46c743cb.woff2",
+    "static/media/check.svg": "/maiki-mo/identity-oauth/static/media/check.dfcec944.svg",
+    "static/media/old-rocket.png": "/maiki-mo/identity-oauth/static/media/old-rocket.971ef1d4.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f0924e6e.js",
+    "static/css/2.67f94d93.chunk.css",
+    "static/js/2.8af45c1f.chunk.js",
+    "static/css/main.c60ffd32.chunk.css",
+    "static/js/main.dbd03e5f.chunk.js"
+  ]
+}
