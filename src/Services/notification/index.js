@@ -4,6 +4,7 @@ const notificationUrl = "https://identity-notif.ddns.net/";
 const requestCodePath = "code";
 
 const requestCode = async ({ type, identifier }) => {
+    console.log(type, identifier);
     try {
         return await axios({
             method: 'post',
